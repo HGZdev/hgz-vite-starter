@@ -1,23 +1,16 @@
 import React from "react";
 import {useQuery, useMutation, QueryResult} from "@apollo/client";
-import {gql} from "graphql-tag";
+import {GET_COUNTER, INCREMENT_COUNTER} from "../server/gql";
 import "./App.css";
 
-interface CounterData {
-  counter: number;
+interface CounterType {
+  id: string;
+  value: number;
 }
 
-export const GET_COUNTER = gql`
-  query counter {
-    counter
-  }
-`;
-
-export const INCREMENT_COUNTER = gql`
-  mutation incrementCounter {
-    incrementCounter
-  }
-`;
+interface CounterData {
+  counter: CounterType;
+}
 
 const App: React.FC = () => {
   const {loading, error, data, refetch}: QueryResult<CounterData> =
@@ -30,7 +23,7 @@ const App: React.FC = () => {
     return <p>Error: {errorMessage.message}</p>;
   }
 
-  const counter: number = data?.counter ?? 0;
+  const counterValue: CounterType["value"] = data?.counter.value ?? 0;
 
   const handleIncrement = async () => {
     try {
@@ -43,11 +36,19 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="container">
+    <div className="container" role="main">
       <div className="content">
-        <h1 className="title">Counter App</h1>
-        <p className="counter-text">Counter: {counter}</p>
-        <button className="increment-button" onClick={handleIncrement}>
+        <h1 className="title" aria-label="Counter Application">
+          Counter App
+        </h1>
+        <p className="counter-text" role="status" aria-live="polite">
+          Counter: {counterValue}
+        </p>
+        <button
+          className="increment-button"
+          onClick={handleIncrement}
+          aria-label="Increment the counter"
+        >
           Increment
         </button>
       </div>

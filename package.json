@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "node": "node server/index.js --watch --debug",
-    "build": "tsc && vite build --watch",
+    "node": "tsc && node --loader ts-node/esm  server/index.js --watch --debug",
+    "build": "tsc && vite build  --watch",
     "prod": "vite preview",
+    "test": "vitest",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
@@ -17,12 +18,17 @@
     "express": "^4.18.2",
     "graphql": "^16.8.1",
     "graphql-tag": "^2.12.6",
+    "msw": "^2.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "sqlite": "^5.0.1",
-    "sqlite3": "^5.1.6"
+    "sqlite3": "^5.1.6",
+    "ts-node": "^10.9.1",
+    "vitest": "^0.34.6"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.1.4",
+    "@testing-library/react": "^14.0.0",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
@@ -32,6 +38,8 @@
     "eslint": "^8.45.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
+    "jsdom": "^22.1.0",
+    "testing": "link:@apollo/client/testing",
     "typescript": "^5.0.2",
     "vite": "^4.4.5"
   }
