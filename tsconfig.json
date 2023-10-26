@@ -6,6 +6,10 @@
     "module": "ESNext",
     "skipLibCheck": true,
 
+    /* Allow JS Imports */
+    // "allowJs": true,
+    // "esModuleInterop": true,
+
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
@@ -20,7 +24,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["./src", "./server"],
+  "include": ["**/*.d.ts", "./src", "vite-env.d.ts", "./lib", "./config"],
   "exclude": ["node_modules"],
   "references": [{"path": "./tsconfig.node.json"}]
 }
