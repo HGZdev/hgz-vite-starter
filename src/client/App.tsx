@@ -1,6 +1,7 @@
+// src/client/App.tsx
 import React from "react";
 import {useQuery, useMutation, QueryResult} from "@apollo/client";
-import {GET_COUNTER, INCREMENT_COUNTER} from "../server/gql";
+import {GET_COUNTER, INCREMENT_COUNTER} from "../_server/queries/counter.ts";
 import "./App.css";
 
 interface CounterType {

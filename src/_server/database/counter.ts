@@ -1,3 +1,5 @@
+// ./src/_server/database/counter.ts
+
 import sqlite3 from "sqlite3";
 
 // Create a new database connection

@@ -1,8 +1,9 @@
+// src/client/App.test.tsx
 import {render, screen, fireEvent} from "@testing-library/react";
 import {describe, it, expect} from "vitest";
 import {MockedProvider} from "@apollo/client/testing";
-import {GET_COUNTER, INCREMENT_COUNTER} from "../server/gql";
-import App from "./App";
+import {GET_COUNTER, INCREMENT_COUNTER} from "../_server/queries/counter.ts";
+import App from "./App.tsx";
 
 const mockedValue = 5;
 

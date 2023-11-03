@@ -8,7 +8,7 @@ export default defineConfig({
     port: 3000, // LOCAL_PORT
   },
   build: {
-    outDir: "build", // Set the output directory to 'build'
+    outDir: "build", // OUT_DIR
   },
   test: {
     environment: "jsdom", //
