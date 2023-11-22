@@ -2,9 +2,9 @@
 import express from "express";
 import http from "http";
 import cors from "cors";
-import db from "./database/counter.js";
-import {makeApolloServer} from "../../lib/apollo/ApolloServer.ts";
+import db from "./database/index.js";
 import {
+  makeApolloServer,
   ApolloServerPluginDrainHttpServer,
   expressMiddleware,
 } from "../../lib/apollo/index.ts";
@@ -27,7 +27,11 @@ app.use(
   cors(),
   express.json(),
   expressMiddleware(apolloServer, {
-    context: async (req) => ({...req, db}),
+    context: async (req) => ({
+      ...req,
+      db,
+      // user: getUserFromToken(req.headers.authorization),
+    }),
   })
 );
 

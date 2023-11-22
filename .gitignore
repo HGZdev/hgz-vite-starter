@@ -25,4 +25,4 @@ build-ssr
 
 
 config
-counters.db
+models.db

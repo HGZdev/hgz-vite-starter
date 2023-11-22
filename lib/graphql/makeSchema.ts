@@ -1,4 +1,9 @@
-import {GraphQLFieldResolver, GraphQLObjectType, GraphQLSchema} from "graphql";
+import {
+  GraphQLFieldResolver,
+  GraphQLList,
+  GraphQLObjectType,
+  GraphQLSchema,
+} from "graphql";
 import {type Database} from "sqlite3";
 
 type GraphQLResolverContext = {
@@ -8,11 +13,12 @@ type GraphQLResolverContext = {
 type GraphQLModules = Record<
   string,
   {
-    type: GraphQLObjectType<unknown, unknown>;
+    type:
+      | GraphQLObjectType<unknown, unknown>
+      | GraphQLList<GraphQLObjectType<unknown, unknown>>;
     resolve: GraphQLFieldResolver<unknown, GraphQLResolverContext>;
   }
 >;
-
 const makeSchema = (
   schemas: Array<{queries: GraphQLModules; mutations: GraphQLModules}>
 ): GraphQLSchema => {
