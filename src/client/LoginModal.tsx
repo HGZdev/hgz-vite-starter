@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {useMutation} from "@apollo/client";
 import {LOGIN_MUTATION} from "../_server/queries";
-import styled, {css} from "styled-components";
+import styled from "styled-components";
 
 interface Props {
   onClose: (isLoggedIn: boolean) => void;
