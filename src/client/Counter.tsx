@@ -1,19 +1,58 @@
+import React from "react";
 import {useQuery, useMutation} from "../../lib/apollo";
 import {GET_COUNTER, INCREMENT_COUNTER} from "../_server/queries";
 import {type QueryResult} from "@apollo/client";
+import styled from "styled-components";
 
-interface CounterType {
-  id: string;
-  value: number;
-}
+// Styled components for Counter
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #f5f5f5;
+`;
 
-interface CounterData {
-  counter: CounterType;
-}
+const Content = styled.div`
+  text-align: center;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  max-width: 300px;
+`;
 
+const Title = styled.h1`
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 10px;
+`;
+
+const CounterText = styled.p`
+  font-size: 20px;
+  color: #555;
+  margin: 0;
+`;
+
+const IncrementButton = styled.button`
+  background-color: #0074d9;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 18px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+// Counter component
 const Counter = () => {
-  const {loading, error, data, refetch}: QueryResult<CounterData> =
-    useQuery(GET_COUNTER);
+  const {loading, error, data, refetch}: QueryResult = useQuery(GET_COUNTER);
   const [incrementCounter] = useMutation(INCREMENT_COUNTER);
 
   if (loading) return <p>Loading...</p>;
@@ -22,33 +61,33 @@ const Counter = () => {
     return <p>Error: {errorMessage.message}</p>;
   }
 
-  const counterValue: CounterType["value"] = data?.counter.value ?? 0;
+  const counterValue = data?.counter.value ?? 0;
 
   const handleIncrement = async () => {
     try {
       await incrementCounter();
-      refetch(); // Manually refetch the counter value after the increment
+      refetch();
     } catch (error) {
       const errorMessage = error as Error;
       console.error("Error incrementing counter:", errorMessage.message);
     }
   };
+
   return (
-    <div className="content">
-      <h1 className="title" aria-label="Counter Application">
-        Counter App
-      </h1>
-      <p className="counter-text" role="status" aria-live="polite">
-        Counter: {counterValue}
-      </p>
-      <button
-        className="increment-button"
-        onClick={handleIncrement}
-        aria-label="Increment the counter"
-      >
-        Increment
-      </button>
-    </div>
+    <Container role="main">
+      <Content>
+        <Title aria-label="Counter Application">Counter App</Title>
+        <CounterText role="status" aria-live="polite">
+          Counter: {counterValue}
+        </CounterText>
+        <IncrementButton
+          onClick={handleIncrement}
+          aria-label="Increment the counter"
+        >
+          Increment
+        </IncrementButton>
+      </Content>
+    </Container>
   );
 };
 

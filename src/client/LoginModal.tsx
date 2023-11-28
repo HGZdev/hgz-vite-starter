@@ -1,11 +1,80 @@
 import React, {useState} from "react";
 import {useMutation} from "@apollo/client";
 import {LOGIN_MUTATION} from "../_server/queries";
-import "./LoginModal.css";
+import styled, {css} from "styled-components";
 
 interface Props {
   onClose: (isLoggedIn: boolean) => void;
 }
+
+const ModalBackground = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.8);
+`;
+
+const ModalContent = styled.div`
+  background-color: white;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 24rem;
+`;
+
+const CloseButton = styled.span`
+  float: right;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: #718096;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: #2d3748;
+  }
+`;
+
+const FormGroup = styled.div`
+  margin-bottom: 1.5rem;
+`;
+
+const Label = styled.label`
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #4a5568;
+`;
+
+const Input = styled.input`
+  width: calc(100% - 1rem);
+  padding: 0.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.25rem;
+`;
+
+const ErrorMessage = styled.div`
+  color: #ef4444;
+  margin-bottom: 1rem;
+`;
+
+const SubmitButton = styled.button`
+  width: 100%;
+  padding: 1rem;
+  background-color: #2563eb;
+  color: white;
+  border-radius: 0.25rem;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #1d4ed8;
+  }
+`;
 
 const LoginModal: React.FC<Props> = ({onClose}) => {
   const [email, setEmail] = useState("");
@@ -13,14 +82,13 @@ const LoginModal: React.FC<Props> = ({onClose}) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [login] = useMutation(LOGIN_MUTATION, {
     onError: (error) => {
-      // Handle the error
       setErrorMessage(error.message);
     },
   });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setErrorMessage(null); // Clear previous error messages
+    setErrorMessage(null);
     try {
       const response = await login({variables: {email, password}});
       if (response.data.login.token) {
@@ -28,44 +96,40 @@ const LoginModal: React.FC<Props> = ({onClose}) => {
         onClose(true);
       }
     } catch (err) {
-      // Errors are handled in the onError callback, so you may not need this catch block
+      // Error handling
     }
   };
 
-  // if (loading) return <div>Loading...</div>;
-
   return (
-    <div className="login-modal">
-      <div className="modal-content">
-        <span className="close-button" onClick={() => onClose(false)}>
-          &times;
-        </span>
+    <ModalBackground>
+      <ModalContent>
+        <CloseButton onClick={() => onClose(false)}>&times;</CloseButton>
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="email">Email:</label>
-            <input
+          <FormGroup>
+            <Label htmlFor="email">Email:</Label>
+            <Input
               type="email"
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-          </div>
-          <div className="form-group">
-            <label htmlFor="password">Password:</label>
-            <input
+          </FormGroup>
+          <FormGroup>
+            <Label htmlFor="password">Password:</Label>
+            <Input
               type="password"
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-          </div>
-          {errorMessage && <div className="error-message">{errorMessage}</div>}
-          <button type="submit">Login</button>
+          </FormGroup>
+          {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+          <SubmitButton type="submit">Login</SubmitButton>
         </form>
-      </div>
-    </div>
+      </ModalContent>
+    </ModalBackground>
   );
 };
 
