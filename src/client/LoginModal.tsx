@@ -3,10 +3,6 @@ import {useMutation} from "@apollo/client";
 import {LOGIN_MUTATION} from "../_server/queries";
 import styled from "styled-components";
 
-interface Props {
-  onClose: (isLoggedIn: boolean) => void;
-}
-
 const ModalBackground = styled.div`
   position: fixed;
   top: 0;
@@ -26,18 +22,6 @@ const ModalContent = styled.div`
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
   width: 100%;
   max-width: 24rem;
-`;
-
-const CloseButton = styled.span`
-  float: right;
-  cursor: pointer;
-  font-size: 1.5rem;
-  color: #718096;
-  transition: color 0.3s ease;
-
-  &:hover {
-    color: #2d3748;
-  }
 `;
 
 const FormGroup = styled.div`
@@ -76,7 +60,7 @@ const SubmitButton = styled.button`
   }
 `;
 
-const LoginModal: React.FC<Props> = ({onClose}) => {
+const LoginModal: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -93,7 +77,6 @@ const LoginModal: React.FC<Props> = ({onClose}) => {
       const response = await login({variables: {email, password}});
       if (response.data.login.token) {
         localStorage.setItem("token", response.data.login.token);
-        onClose(true);
       }
     } catch (err) {
       // Error handling
@@ -103,7 +86,6 @@ const LoginModal: React.FC<Props> = ({onClose}) => {
   return (
     <ModalBackground>
       <ModalContent>
-        <CloseButton onClick={() => onClose(false)}>&times;</CloseButton>
         <form onSubmit={handleSubmit}>
           <FormGroup>
             <Label htmlFor="email">Email:</Label>

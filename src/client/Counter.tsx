@@ -1,4 +1,3 @@
-import React from "react";
 import {useQuery, useMutation} from "../../lib/apollo";
 import {GET_COUNTER, INCREMENT_COUNTER} from "../_server/queries";
 import {type QueryResult} from "@apollo/client";
