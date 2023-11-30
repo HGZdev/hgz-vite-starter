@@ -1,9 +1,8 @@
 import React from "react";
-import Counter from "./Counter";
-import LoginModal from "./LoginModal";
+import LandingPage from "./LandingPage";
 
 const App: React.FC = () => {
-  const isLoggedIn = false;
-  return <>{isLoggedIn ? <Counter /> : <LoginModal />}</>;
+  return <LandingPage />;
 };
+
 export default App;

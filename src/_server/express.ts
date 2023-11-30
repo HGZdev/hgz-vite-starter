@@ -42,7 +42,7 @@ app.use(
   expressMiddleware(apolloServer, {
     context: async (req) =>
       // @ts-ignore
-      console.log(req) || {
+      console.log() || {
         ...req,
         db,
         // @ts-ignore

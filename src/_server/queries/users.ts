@@ -64,3 +64,9 @@ export const LOGIN_MUTATION = gql`
     }
   }
 `;
+
+export const IS_AUTH = gql`
+  query isAuth {
+    isAuth
+  }
+`;

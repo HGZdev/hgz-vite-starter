@@ -115,7 +115,7 @@ const schema = {
         });
       },
     },
-    isAuthenticated: {
+    isAuth: {
       type: GraphQLBoolean,
       resolve: async (
         _root: unknown,
