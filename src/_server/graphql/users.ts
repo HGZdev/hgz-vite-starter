@@ -121,10 +121,7 @@ const schema = {
         _root: unknown,
         _args: unknown,
         context: GraphQLResolverContext
-      ) => {
-        // Check the context to determine if the user is authenticated
-        return !!context.user;
-      },
+      ) => !!context.user,
     },
   },
   mutations: {

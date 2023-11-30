@@ -1,21 +1,15 @@
 import React, {useState, FormEvent} from "react";
-import {useMutation, gql} from "@apollo/client";
+import {useMutation} from "@apollo/client";
 import LoginModal from "./LoginModal";
 import styled from "styled-components";
+import {SAVE_USER} from "../_server/queries";
 
 interface RegistrationData {
   email: string;
+  firstName: string;
+  lastName: string;
   password: string;
 }
-
-const REGISTER_USER = gql`
-  mutation RegisterUser($email: String!, $password: String!) {
-    registerUser(email: $email, password: $password) {
-      id
-      email
-    }
-  }
-`;
 
 const RegistrationContainer = styled.div`
   display: flex;
@@ -48,17 +42,18 @@ const RegistrationError = styled.p`
 
 const Registration: React.FC = () => {
   const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [error, setError] = useState("");
 
-  const [registerUser, {loading}] =
-    useMutation<RegistrationData>(REGISTER_USER);
+  const [saveUser, {loading}] = useMutation<RegistrationData>(SAVE_USER);
 
-  const handleRegistration = async (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!email || !password) {
-      setError("Please enter both email and password");
+    if (!email || !password || !firstName || !lastName) {
+      setError("Please enter all required fields");
       return;
     }
     // Regex validation for email format
@@ -76,21 +71,21 @@ const Registration: React.FC = () => {
       return;
     }
     try {
-      const {data} = await registerUser({
-        variables: {email, password},
+      const saved = await saveUser({
+        variables: {email, firstName, lastName, password},
       });
       // Handle successful registration
-      setShowLoginModal(true);
+      if (saved) setShowLoginModal(true);
     } catch (error) {
       // Handle registration error
-      setError(error.message);
+      if (error instanceof Error) setError(error.message);
     }
   };
 
   return (
     <RegistrationContainer>
       <h2>Registration Form</h2>
-      <RegistrationForm onSubmit={handleRegistration}>
+      <RegistrationForm onSubmit={handleSubmit}>
         <RegistrationLabel htmlFor="email">Email:</RegistrationLabel>
         <RegistrationInput
           type="email"
@@ -98,6 +93,24 @@ const Registration: React.FC = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           aria-label="Email"
+          required
+        />
+        <RegistrationLabel htmlFor="firstName">First Name:</RegistrationLabel>
+        <RegistrationInput
+          type="text"
+          id="firstName"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          aria-label="First Name"
+          required
+        />
+        <RegistrationLabel htmlFor="lastName">Last Name:</RegistrationLabel>
+        <RegistrationInput
+          type="text"
+          id="lastName"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+          aria-label="Last Name"
           required
         />
         <RegistrationLabel htmlFor="password">Password:</RegistrationLabel>

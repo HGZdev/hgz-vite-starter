@@ -1,4 +1,3 @@
-// npm install @apollo/server express graphql cors
 import express from "express";
 import http from "http";
 import cors from "cors";
@@ -41,11 +40,14 @@ app.use(
   cors(),
   express.json(),
   expressMiddleware(apolloServer, {
-    context: async (req) => ({
-      ...req,
-      db,
-      user: getUserFromToken(req.headers.token), // Add logged user to context
-    }),
+    context: async (req) =>
+      // @ts-ignore
+      console.log(req) || {
+        ...req,
+        db,
+        // @ts-ignore
+        user: getUserFromToken(req.headers?.token), // Add logged user to context
+      },
   })
 );
 

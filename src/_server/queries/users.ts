@@ -33,13 +33,13 @@ export const SAVE_USER = gql`
     $email: String!
     $firstName: String
     $lastName: String
-    $hashedPassword: String!
+    $password: String!
   ) {
     saveUser(
       email: $email
       firstName: $firstName
       lastName: $lastName
-      hashedPassword: $hashedPassword
+      password: $password
     ) {
       id
       email
@@ -47,7 +47,6 @@ export const SAVE_USER = gql`
       lastName
       createdTs
       updatedTs
-      hashedPassword
     }
   }
 `;

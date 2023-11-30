@@ -52,7 +52,7 @@ const db = new sqlite3.Database("models.db", async (err) => {
         INSERT OR IGNORE INTO users (email, firstName, lastName, hashedPassword)
         VALUES (?, ?, ?, ?)
       `,
-          ["test@gmail.com", "Test", "User", hashedPassword],
+          ["test@gmail.com", "secret123", "User", hashedPassword],
           (err) => {
             if (err) {
               console.error("Error inserting initial user:", err.message);

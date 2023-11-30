@@ -3,6 +3,7 @@ import {
   GraphQLList,
   GraphQLObjectType,
   GraphQLSchema,
+  GraphQLScalarType,
 } from "graphql";
 import {type Database} from "sqlite3";
 
@@ -15,10 +16,12 @@ type GraphQLModules = Record<
   {
     type:
       | GraphQLObjectType<unknown, unknown>
-      | GraphQLList<GraphQLObjectType<unknown, unknown>>;
+      | GraphQLList<GraphQLObjectType<unknown, unknown>>
+      | GraphQLScalarType<boolean, boolean>;
     resolve: GraphQLFieldResolver<unknown, GraphQLResolverContext>;
   }
 >;
+
 const makeSchema = (
   schemas: Array<{queries: GraphQLModules; mutations: GraphQLModules}>
 ): GraphQLSchema => {
