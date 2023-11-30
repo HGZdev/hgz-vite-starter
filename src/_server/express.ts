@@ -2,6 +2,7 @@
 import express from "express";
 import http from "http";
 import cors from "cors";
+import jwt from "jsonwebtoken";
 import db from "./database/index.js";
 import {
   makeApolloServer,
@@ -11,6 +12,19 @@ import {
 import schema from "./graphql/index.ts";
 
 const LOCAL_SERVER_PORT = 8080;
+console.log("process.env.JWT_SECRET:", process.env.JWT_SECRET);
+
+const getUserFromToken = (token: string) => {
+  try {
+    if (token) {
+      const user = jwt.verify(token, process.env.JWT_SECRET || "a");
+      return user;
+    }
+  } catch (err) {
+    console.log(err);
+  }
+  return null;
+};
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -30,7 +44,7 @@ app.use(
     context: async (req) => ({
       ...req,
       db,
-      // user: getUserFromToken(req.headers.authorization),
+      user: getUserFromToken(req.headers.token), // Add logged user to context
     }),
   })
 );

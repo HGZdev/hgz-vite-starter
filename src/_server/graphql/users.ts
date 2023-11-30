@@ -4,6 +4,7 @@ import {
   GraphQLString,
   GraphQLNonNull,
   GraphQLList,
+  GraphQLBoolean,
 } from "graphql";
 import {Database} from "sqlite3";
 import bcrypt from "bcrypt";
@@ -31,6 +32,7 @@ interface UserType {
 
 type GraphQLResolverContext = {
   db: Database;
+  user?: UserType;
 };
 
 const AuthPayloadType = new GraphQLObjectType({
@@ -113,13 +115,17 @@ const schema = {
         });
       },
     },
-    // isAuthenticated: {
-    //   type: GraphQLBoolean,
-    //   resolve: async (_root: unknown, context: GraphQLResolverContext) => {
-    //     // Check the context to determine if the user is authenticated
-    //     return !!context.user;
-    //   },
-    // },
+    isAuthenticated: {
+      type: GraphQLBoolean,
+      resolve: async (
+        _root: unknown,
+        _args: unknown,
+        context: GraphQLResolverContext
+      ) => {
+        // Check the context to determine if the user is authenticated
+        return !!context.user;
+      },
+    },
   },
   mutations: {
     saveUser: {
@@ -286,8 +292,8 @@ const schema = {
 
               // User is found and password matches
               const token = jwt.sign(
-                {userId: userRow.id.toString()},
-                "your-secret-key",
+                {user: userRow},
+                process.env.JWT_SECRET || "a",
                 {expiresIn: "1h"}
               );
               resolve({token});
