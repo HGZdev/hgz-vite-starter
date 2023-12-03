@@ -1,7 +1,7 @@
 import express from "express";
 import http from "http";
 import cors from "cors";
-import jwt from "jsonwebtoken";
+
 import db from "./database/index.js";
 import {
   makeApolloServer,
@@ -9,23 +9,16 @@ import {
   expressMiddleware,
 } from "../../lib/apollo/index.ts";
 import schema from "./graphql/index.ts";
+import cookieParser from "cookie-parser";
+import {getUserFromToken} from "./helpers.ts";
 
 const LOCAL_SERVER_PORT = 8080;
 console.log("process.env.JWT_SECRET:", process.env.JWT_SECRET);
 
-const getUserFromToken = (token: string) => {
-  try {
-    if (token) {
-      const user = jwt.verify(token, process.env.JWT_SECRET || "a");
-      return user;
-    }
-  } catch (err) {
-    console.log(err);
-  }
-  return null;
-};
-
 const app = express();
+
+app.use(cookieParser());
+
 const httpServer = http.createServer(app);
 
 const apolloServer = await makeApolloServer({
@@ -40,14 +33,11 @@ app.use(
   cors(),
   express.json(),
   expressMiddleware(apolloServer, {
-    context: async (req) =>
+    context: async ({req}) => {
       // @ts-ignore
-      console.log() || {
-        ...req,
-        db,
-        // @ts-ignore
-        user: getUserFromToken(req.headers?.token), // Add logged user to context
-      },
+      const user = getUserFromToken(req.headers.token);
+      return {...req, db, user}; // Add database and logged user to context
+    },
   })
 );
 

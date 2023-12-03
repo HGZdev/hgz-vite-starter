@@ -1,6 +1,5 @@
 import React, {useState, FormEvent} from "react";
 import {useMutation} from "@apollo/client";
-import LoginModal from "./LoginModal";
 import styled from "styled-components";
 import {SAVE_USER} from "../_server/queries";
 
@@ -45,7 +44,6 @@ const Registration: React.FC = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
-  const [showLoginModal, setShowLoginModal] = useState(false);
   const [error, setError] = useState("");
 
   const [saveUser, {loading}] = useMutation<RegistrationData>(SAVE_USER);
@@ -75,7 +73,14 @@ const Registration: React.FC = () => {
         variables: {email, firstName, lastName, password},
       });
       // Handle successful registration
-      if (saved) setShowLoginModal(true);
+      if (saved) {
+        setEmail("");
+        setFirstName("");
+        setLastName("");
+        setPassword("");
+        setError("");
+        window.location.href = "/";
+      }
     } catch (error) {
       // Handle registration error
       if (error instanceof Error) setError(error.message);
@@ -127,7 +132,6 @@ const Registration: React.FC = () => {
         </RegistrationButton>
       </RegistrationForm>
       {error && <RegistrationError>{error}</RegistrationError>}
-      {showLoginModal && <LoginModal />}
     </RegistrationContainer>
   );
 };

@@ -4,11 +4,10 @@ import {
   GraphQLString,
   GraphQLNonNull,
   GraphQLList,
-  GraphQLBoolean,
 } from "graphql";
 import {Database} from "sqlite3";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import {makeTokenFromUser} from "../helpers.ts";
 
 interface UserRow {
   id: number;
@@ -115,13 +114,16 @@ const schema = {
         });
       },
     },
-    isAuth: {
-      type: GraphQLBoolean,
+    userMe: {
+      type: GraphQLUserType,
       resolve: async (
         _root: unknown,
         _args: unknown,
         context: GraphQLResolverContext
-      ) => !!context.user,
+      ) => {
+        // console.log(context.user);
+        return context.user;
+      },
     },
   },
   mutations: {
@@ -288,11 +290,7 @@ const schema = {
               }
 
               // User is found and password matches
-              const token = jwt.sign(
-                {user: userRow},
-                process.env.JWT_SECRET || "a",
-                {expiresIn: "1h"}
-              );
+              const token = makeTokenFromUser(userRow, "1h");
               resolve({token});
             }
           );

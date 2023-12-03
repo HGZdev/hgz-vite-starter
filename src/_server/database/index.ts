@@ -44,7 +44,7 @@ const db = new sqlite3.Database("models.db", async (err) => {
         }
 
         // Hash the initial user's password
-        const hashedPassword = await bcrypt.hash("test", 10);
+        const hashedPassword = await bcrypt.hash("secret123", 10);
 
         // Insert the initial user
         db.run(
@@ -52,7 +52,7 @@ const db = new sqlite3.Database("models.db", async (err) => {
         INSERT OR IGNORE INTO users (email, firstName, lastName, hashedPassword)
         VALUES (?, ?, ?, ?)
       `,
-          ["test@gmail.com", "secret123", "User", hashedPassword],
+          ["test@gmail.com", "test", "test", hashedPassword],
           (err) => {
             if (err) {
               console.error("Error inserting initial user:", err.message);

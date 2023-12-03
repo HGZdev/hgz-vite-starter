@@ -28,6 +28,17 @@ export const GET_USERS = gql`
   }
 `;
 
+export const USER_ME = gql`
+  query userMe {
+    userMe {
+      id
+      email
+      firstName
+      lastName
+    }
+  }
+`;
+
 export const SAVE_USER = gql`
   mutation saveUser(
     $email: String!
@@ -62,11 +73,5 @@ export const LOGIN_MUTATION = gql`
     login(email: $email, password: $password) {
       token
     }
-  }
-`;
-
-export const IS_AUTH = gql`
-  query isAuth {
-    isAuth
   }
 `;

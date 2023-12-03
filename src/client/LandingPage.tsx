@@ -1,7 +1,9 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
-import {IS_AUTH} from "../_server/queries";
+import {USER_ME} from "../_server/queries";
 import {useQuery} from "@apollo/client";
+import LoginModal from "./LoginModal";
+import Dashboard from "./Dashboard";
 
 const LandingPageContainer = styled.div`
   display: flex;
@@ -33,14 +35,19 @@ const LoginButton = styled.button`
 `;
 
 const LandingPage: React.FC = () => {
-  const {data, loading, error} = useQuery(IS_AUTH);
-
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const {data, loading, error} = useQuery(USER_ME);
+  const userMe = data?.userMe;
+  console.log("userMe:", userMe);
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
+  if (showLoginModal)
+    return <LoginModal onClose={() => setShowLoginModal(false)} />;
+
   return (
     <LandingPageContainer>
-      {!data.isAuth && (
+      {!userMe ? (
         <>
           <SignupButton
             aria-label="Sign up"
@@ -50,11 +57,13 @@ const LandingPage: React.FC = () => {
           </SignupButton>
           <LoginButton
             aria-label="Login"
-            onClick={() => (window.location.href = "/login")}
+            onClick={() => setShowLoginModal(true)}
           >
-            Login
+            Log in
           </LoginButton>
         </>
+      ) : (
+        <Dashboard />
       )}
     </LandingPageContainer>
   );

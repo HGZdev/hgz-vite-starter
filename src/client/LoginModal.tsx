@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import {useMutation} from "@apollo/client";
 import {LOGIN_MUTATION} from "../_server/queries";
 import styled from "styled-components";
+import {setCookie} from "./helpers.ts";
 
 const ModalBackground = styled.div`
   position: fixed;
@@ -60,7 +61,11 @@ const SubmitButton = styled.button`
   }
 `;
 
-const LoginModal: React.FC = () => {
+interface LoginModalProps {
+  onClose: () => void;
+}
+
+const LoginModal: React.FC<LoginModalProps> = ({onClose}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -74,12 +79,15 @@ const LoginModal: React.FC = () => {
     e.preventDefault();
     setErrorMessage(null);
     try {
-      const response = await login({variables: {email, password}});
-      if (response.data.login.token) {
-        localStorage.setItem("token", response.data.login.token);
+      const {data} = await login({variables: {email, password}});
+      const token = data?.login?.token;
+
+      if (token) {
+        setCookie("token", token, 1);
+        onClose();
       }
     } catch (err) {
-      // Error handling
+      if (err instanceof Error) setErrorMessage(err.message); // Error handling
     }
   };
 

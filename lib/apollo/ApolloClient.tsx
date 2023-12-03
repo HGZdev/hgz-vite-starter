@@ -3,7 +3,10 @@ import {
   ApolloProvider as ApolloProviderOrg,
   ApolloClient,
   InMemoryCache,
+  createHttpLink,
 } from "@apollo/client";
+import {setContext} from "@apollo/client/link/context";
+import {getCookie} from "../../src/client/helpers";
 
 const {PROD} = import.meta.env;
 
@@ -16,10 +19,27 @@ export const makeApolloProvider = (config: Config) => {
     ? PROD_HOST_URL
     : `${LOCAL_HOST_URL}:${LOCAL_SERVER_PORT}`;
 
+  const URI = `${BASE_URL}${GRAPHQL_DIR}`;
+
+  const link = createHttpLink({
+    uri: URI,
+    // credentials: "same-origin",
+  });
+
+  const authLink = setContext((_, {headers}) => {
+    const token = getCookie("token");
+    return {
+      headers: {
+        ...headers,
+        token,
+      },
+    };
+  });
+
   const client = new ApolloClient({
-    uri: `${BASE_URL}${GRAPHQL_DIR}`,
     cache,
-    connectToDevTools: !PROD, // 'true' - Apollo in browser devtools also in prod mode
+    link: authLink.concat(link), // Concatenate the authLink and the original link
+    connectToDevTools: !PROD,
   });
 
   return ({children}: {children?: React.ReactNode}) => (
