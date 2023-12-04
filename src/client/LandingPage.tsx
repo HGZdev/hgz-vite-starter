@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import styled from "styled-components";
-import {USER_ME} from "../_server/queries";
-import {useQuery} from "@apollo/client";
+import {useGetUserMe} from "../_server/queries";
 import LoginModal from "./LoginModal";
 import Dashboard from "./Dashboard";
 
@@ -36,9 +35,11 @@ const LoginButton = styled.button`
 
 const LandingPage: React.FC = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const {data, loading, error} = useQuery(USER_ME);
-  const userMe = data?.userMe;
-  console.log("userMe:", userMe);
+  const {data, loading, error} = useGetUserMe();
+
+  // @ts-ignore
+  const getUserMe = data?.getUserMe;
+  console.log("getUserMe:", getUserMe);
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
@@ -47,7 +48,7 @@ const LandingPage: React.FC = () => {
 
   return (
     <LandingPageContainer>
-      {!userMe ? (
+      {!getUserMe ? (
         <>
           <SignupButton
             aria-label="Sign up"

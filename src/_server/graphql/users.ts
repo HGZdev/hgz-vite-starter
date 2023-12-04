@@ -4,12 +4,13 @@ import {
   GraphQLString,
   GraphQLNonNull,
   GraphQLList,
+  GraphQLBoolean,
 } from "graphql";
 import {Database} from "sqlite3";
 import bcrypt from "bcrypt";
 import {makeTokenFromUser} from "../helpers.ts";
 
-interface UserRow {
+export interface UserRow {
   id: number;
   email: string;
   firstName: string;
@@ -19,7 +20,7 @@ interface UserRow {
   hashedPassword?: string;
 }
 
-interface UserType {
+export interface UserType {
   id: string;
   email: string;
   firstName: string;
@@ -29,7 +30,7 @@ interface UserType {
   hashedPassword: string;
 }
 
-type GraphQLResolverContext = {
+export type GraphQLResolverContext = {
   db: Database;
   user?: UserType;
 };
@@ -63,7 +64,7 @@ const DeleteUserResultType = new GraphQLObjectType({
 
 const schema = {
   queries: {
-    user: {
+    getUser: {
       type: GraphQLUserType,
       args: {
         id: {type: GraphQLInt},
@@ -95,7 +96,7 @@ const schema = {
         });
       },
     },
-    users: {
+    getUsers: {
       type: new GraphQLList(GraphQLUserType),
       resolve: async (
         _root: unknown,
@@ -114,7 +115,7 @@ const schema = {
         });
       },
     },
-    userMe: {
+    getUserMe: {
       type: GraphQLUserType,
       resolve: async (
         _root: unknown,
@@ -215,8 +216,6 @@ const schema = {
                         };
 
                         resolve(savedUser);
-
-                        resolve(savedUser); // returning new user info
                       }
                     );
                   }
@@ -273,7 +272,7 @@ const schema = {
           context.db.get(
             "SELECT * FROM users WHERE email = ?",
             [args.email],
-            async (err: Error | null, userRow: UserRow) => {
+            async (err: Error | null, row: UserRow) => {
               if (err) {
                 reject(err);
                 return;
@@ -281,20 +280,31 @@ const schema = {
 
               // If user not found or password does not match
               if (
-                !userRow ||
-                !userRow.hashedPassword ||
-                !(await bcrypt.compare(args.password, userRow.hashedPassword))
+                !row ||
+                !row.hashedPassword ||
+                !(await bcrypt.compare(args.password, row.hashedPassword))
               ) {
                 reject(new Error("Invalid credentials"));
                 return;
               }
 
               // User is found and password matches
-              const token = makeTokenFromUser(userRow, "1h");
+              const token = makeTokenFromUser(row);
               resolve({token});
             }
           );
         });
+      },
+    },
+    logout: {
+      type: GraphQLBoolean,
+      resolve: async (
+        _: unknown,
+        _args: unknown,
+        context: GraphQLResolverContext
+      ) => {
+        context.user = undefined;
+        return true;
       },
     },
   },

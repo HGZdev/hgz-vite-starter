@@ -1,6 +1,5 @@
 import React, {useState} from "react";
-import {useMutation} from "@apollo/client";
-import {LOGIN_MUTATION} from "../_server/queries";
+import {useLogin} from "../_server/queries";
 import styled from "styled-components";
 import {setCookie} from "./helpers.ts";
 
@@ -69,17 +68,15 @@ const LoginModal: React.FC<LoginModalProps> = ({onClose}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [login] = useMutation(LOGIN_MUTATION, {
-    onError: (error) => {
-      setErrorMessage(error.message);
-    },
-  });
+
+  const [login] = useLogin();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrorMessage(null);
     try {
-      const {data} = await login({variables: {email, password}});
+      const {data} = await login({email, password});
+      // @ts-ignore
       const token = data?.login?.token;
 
       if (token) {

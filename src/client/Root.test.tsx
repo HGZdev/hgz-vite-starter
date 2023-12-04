@@ -2,7 +2,7 @@ import {render, screen, fireEvent} from "@testing-library/react";
 import {describe, it, expect} from "vitest";
 import {MockedProvider} from "@apollo/client/testing";
 import App from "./Root";
-import {GET_COUNTER, INCREMENT_COUNTER} from "../_server/queries";
+import {getCounterGQL, incrementCounterGQL} from "../_server/queries";
 
 const mockedValue = 5;
 
@@ -10,7 +10,7 @@ const mockedValue = 5;
 const mocks = [
   {
     request: {
-      query: GET_COUNTER,
+      query: getCounterGQL,
     },
     result: {
       data: {counter: {id: "1", value: mockedValue}},
@@ -18,7 +18,7 @@ const mocks = [
   },
   {
     request: {
-      query: INCREMENT_COUNTER,
+      query: incrementCounterGQL,
     },
     result: {
       data: {incrementCounter: {id: "1", value: mockedValue + 1}}, // Incremented value is also wrapped in an object
@@ -26,7 +26,7 @@ const mocks = [
   },
   {
     request: {
-      query: GET_COUNTER,
+      query: getCounterGQL,
     },
     result: {
       data: {counter: {id: "1", value: mockedValue + 1}}, // Next fetch also provides incremented value

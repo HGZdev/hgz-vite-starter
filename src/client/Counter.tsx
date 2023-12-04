@@ -1,6 +1,4 @@
-import {useQuery, useMutation} from "../../lib/apollo";
-import {GET_COUNTER, INCREMENT_COUNTER} from "../_server/queries";
-import {type QueryResult} from "@apollo/client";
+import {useGetCounter, useIncrementCounter} from "../_server/queries";
 import styled from "styled-components";
 
 // Styled components for Counter
@@ -51,8 +49,8 @@ const IncrementButton = styled.button`
 
 // Counter component
 const Counter = () => {
-  const {loading, error, data, refetch}: QueryResult = useQuery(GET_COUNTER);
-  const [incrementCounter] = useMutation(INCREMENT_COUNTER);
+  const {loading, error, data, refetch} = useGetCounter();
+  const [incrementCounter] = useIncrementCounter();
 
   if (loading) return <p>Loading...</p>;
   if (error) {
@@ -60,7 +58,7 @@ const Counter = () => {
     return <p>Error: {errorMessage.message}</p>;
   }
 
-  const counterValue = data?.counter.value ?? 0;
+  const counterValue = data?.getCounter.value ?? 0;
 
   const handleIncrement = async () => {
     try {

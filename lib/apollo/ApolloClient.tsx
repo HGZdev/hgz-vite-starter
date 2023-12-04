@@ -23,7 +23,6 @@ export const makeApolloProvider = (config: Config) => {
 
   const link = createHttpLink({
     uri: URI,
-    // credentials: "same-origin",
   });
 
   const authLink = setContext((_, {headers}) => {
@@ -31,7 +30,7 @@ export const makeApolloProvider = (config: Config) => {
     return {
       headers: {
         ...headers,
-        token,
+        token: token ?? "",
       },
     };
   });

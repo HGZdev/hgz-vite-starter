@@ -1,14 +1,6 @@
 import React, {useState, FormEvent} from "react";
-import {useMutation} from "@apollo/client";
 import styled from "styled-components";
-import {SAVE_USER} from "../_server/queries";
-
-interface RegistrationData {
-  email: string;
-  firstName: string;
-  lastName: string;
-  password: string;
-}
+import {useSaveUser} from "../_server/queries";
 
 const RegistrationContainer = styled.div`
   display: flex;
@@ -46,7 +38,7 @@ const Registration: React.FC = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const [saveUser, {loading}] = useMutation<RegistrationData>(SAVE_USER);
+  const [saveUser, {loading}] = useSaveUser();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -69,9 +61,8 @@ const Registration: React.FC = () => {
       return;
     }
     try {
-      const saved = await saveUser({
-        variables: {email, firstName, lastName, password},
-      });
+      const saved = await saveUser({email, firstName, lastName, password});
+
       // Handle successful registration
       if (saved) {
         setEmail("");

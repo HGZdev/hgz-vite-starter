@@ -1,19 +1,15 @@
 import {GraphQLObjectType, GraphQLInt, GraphQLString} from "graphql";
-import {type Database} from "sqlite3";
+import type {GraphQLResolverContext} from "./users";
 
-interface CounterType {
-  id: string;
-  value: number;
-}
-
-interface CounterRow {
+export interface CounterRow {
   id: number;
   value: number;
 }
 
-type GraphQLResolverContext = {
-  db: Database;
-};
+export interface CounterType {
+  id: string;
+  value: number;
+}
 
 const GraphQLCounterType = new GraphQLObjectType({
   name: "Counter",
@@ -25,7 +21,7 @@ const GraphQLCounterType = new GraphQLObjectType({
 
 const schema = {
   queries: {
-    counter: {
+    getCounter: {
       type: GraphQLCounterType,
       resolve: async (
         _root: unknown,

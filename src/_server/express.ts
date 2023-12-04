@@ -13,7 +13,6 @@ import cookieParser from "cookie-parser";
 import {getUserFromToken} from "./helpers.ts";
 
 const LOCAL_SERVER_PORT = 8080;
-console.log("process.env.JWT_SECRET:", process.env.JWT_SECRET);
 
 const app = express();
 
@@ -36,7 +35,7 @@ app.use(
     context: async ({req}) => {
       // @ts-ignore
       const user = getUserFromToken(req.headers.token);
-      return {...req, db, user}; // Add database and logged user to context
+      return {...req, db, user};
     },
   })
 );

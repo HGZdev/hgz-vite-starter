@@ -16,6 +16,18 @@ export const setCookie = (
   document.cookie = cookie;
 };
 
+export const destroyCookie = (name: string): void => {
+  const expires = new Date();
+  expires.setTime(expires.getTime() - 1);
+
+  const cookie = serialize(name, "", {
+    expires,
+    path: "/",
+  });
+
+  document.cookie = cookie;
+};
+
 export const getCookie = (name: string): string | undefined => {
   const cookies = parse(document.cookie);
   return cookies[name];
