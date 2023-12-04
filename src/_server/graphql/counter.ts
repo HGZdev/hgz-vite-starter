@@ -1,5 +1,5 @@
 import {GraphQLObjectType, GraphQLInt, GraphQLString} from "graphql";
-import type {GraphQLResolverContext} from "./users";
+import {type GraphQLResolverContext} from ".";
 
 export interface CounterRow {
   id: number;

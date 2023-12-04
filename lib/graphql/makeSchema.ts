@@ -5,13 +5,8 @@ import {
   GraphQLSchema,
   GraphQLScalarType,
 } from "graphql";
-import {type Database} from "sqlite3";
 
-type GraphQLResolverContext = {
-  db: Database;
-};
-
-type GraphQLModules = Record<
+type GraphQLModules<GraphQLResolverContext> = Record<
   string,
   {
     type:
@@ -22,11 +17,14 @@ type GraphQLModules = Record<
   }
 >;
 
-const makeSchema = (
-  schemas: Array<{queries: GraphQLModules; mutations: GraphQLModules}>
+const makeSchema = <GraphQLResolverContext>(
+  schemas: Array<{
+    queries: GraphQLModules<GraphQLResolverContext>;
+    mutations: GraphQLModules<GraphQLResolverContext>;
+  }>
 ): GraphQLSchema => {
-  let queriesAll: GraphQLModules = {};
-  let mutationsAll: GraphQLModules = {};
+  let queriesAll: GraphQLModules<GraphQLResolverContext> = {};
+  let mutationsAll: GraphQLModules<GraphQLResolverContext> = {};
 
   for (const schema of schemas) {
     queriesAll = {...queriesAll, ...schema.queries};

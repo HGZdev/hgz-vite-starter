@@ -27,15 +27,24 @@ const apolloServer = await makeApolloServer({
 
 await apolloServer.start();
 
+// enable cors
+// const corsOptions = {
+//   origin: "http://localhost:3000",
+//   credentials: true,
+// };
+
 app.use(
   "/graphql",
   cors(),
   express.json(),
   expressMiddleware(apolloServer, {
-    context: async ({req}) => {
+    context: async ({req, res}) => {
+      console.log("req.headers.token:", !!req.headers.token);
+      console.log("cookies", req.cookies);
+
       // @ts-ignore
       const user = getUserFromToken(req.headers.token);
-      return {...req, db, user};
+      return {req, res, db, user};
     },
   })
 );

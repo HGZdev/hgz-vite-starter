@@ -1,14 +1,12 @@
 import {useGetUserMe, useLogout} from "../_server/queries";
 import Counter from "./Counter.tsx";
-import {destroyCookie} from "./helpers.ts";
 
 const Dashboard = () => {
   const {loading, error, data} = useGetUserMe();
   const [logout] = useLogout();
 
-  const handleLogout = () => {
-    destroyCookie("token");
-    logout();
+  const handleLogout = async () => {
+    await logout();
   };
 
   if (!data && loading) return <div>Loading...</div>;

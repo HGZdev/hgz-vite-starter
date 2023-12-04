@@ -6,9 +6,9 @@ import {
   GraphQLList,
   GraphQLBoolean,
 } from "graphql";
-import {Database} from "sqlite3";
 import bcrypt from "bcrypt";
 import {makeTokenFromUser} from "../helpers.ts";
+import {type GraphQLResolverContext} from ".";
 
 export interface UserRow {
   id: number;
@@ -29,11 +29,6 @@ export interface UserType {
   updatedTs: string;
   hashedPassword: string;
 }
-
-export type GraphQLResolverContext = {
-  db: Database;
-  user?: UserType;
-};
 
 const AuthPayloadType = new GraphQLObjectType({
   name: "AuthPayload",
@@ -122,7 +117,7 @@ const schema = {
         _args: unknown,
         context: GraphQLResolverContext
       ) => {
-        // console.log(context.user);
+        console.log("getUserMe", !!context.user);
         return context.user;
       },
     },
@@ -290,6 +285,15 @@ const schema = {
 
               // User is found and password matches
               const token = makeTokenFromUser(row);
+
+              context.res.cookie("token", token, {
+                httpOnly: true,
+                maxAge: 1000 * 60 * 60, // 1 hour
+              });
+              console.log("login cookies", context.req.cookies);
+
+              // context.user = row as unknown as UserType;
+
               resolve({token});
             }
           );
@@ -303,7 +307,9 @@ const schema = {
         _args: unknown,
         context: GraphQLResolverContext
       ) => {
-        context.user = undefined;
+        context.res.cookie("token", "");
+        console.log("logout cookies", context.req.cookies);
+        // context.user = undefined;
         return true;
       },
     },

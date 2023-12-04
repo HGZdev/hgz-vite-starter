@@ -155,11 +155,20 @@ export const useLogin = makeMutationHook<LoginTData, LoginTVariables>(
   }
 );
 
+// For login
+type LogoutTData = {
+  logout: boolean;
+};
+type LogoutTVariables = object;
+
 export const logoutGQL = makeGQL({
   name: "logout",
   operationType: "mutation",
 });
 
-export const useLogout = makeMutationHook(logoutGQL, {
-  refetchQueries: ["getUserMe", "getUser", "getUsers"],
-});
+export const useLogout = makeMutationHook<LogoutTData, LogoutTVariables>(
+  logoutGQL,
+  {
+    refetchQueries: ["getUserMe", "getUser", "getUsers"],
+  }
+);
