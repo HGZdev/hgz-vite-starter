@@ -117,7 +117,6 @@ const schema = {
         _args: unknown,
         context: GraphQLResolverContext
       ) => {
-        console.log("getUserMe", !!context.user);
         return context.user;
       },
     },
@@ -283,16 +282,9 @@ const schema = {
                 return;
               }
 
-              // User is found and password matches
               const token = makeTokenFromUser(row);
-
-              context.res.cookie("token", token, {
-                httpOnly: true,
-                maxAge: 1000 * 60 * 60, // 1 hour
-              });
-              console.log("login cookies", context.req.cookies);
-
-              // context.user = row as unknown as UserType;
+              context.user = row as unknown as UserType;
+              // context.res.cookie("token", token);
 
               resolve({token});
             }
@@ -307,9 +299,9 @@ const schema = {
         _args: unknown,
         context: GraphQLResolverContext
       ) => {
-        context.res.cookie("token", "");
-        console.log("logout cookies", context.req.cookies);
-        // context.user = undefined;
+        // context.res.cookie("token", "");
+        // context.res.clearCookie("token");
+        context.user = undefined;
         return true;
       },
     },

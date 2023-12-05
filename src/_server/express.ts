@@ -39,9 +39,6 @@ app.use(
   express.json(),
   expressMiddleware(apolloServer, {
     context: async ({req, res}) => {
-      console.log("req.headers.token:", !!req.headers.token);
-      console.log("cookies", req.cookies);
-
       // @ts-ignore
       const user = getUserFromToken(req.headers.token);
       return {req, res, db, user};

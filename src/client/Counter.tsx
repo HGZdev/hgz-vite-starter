@@ -1,22 +1,19 @@
 import {useGetCounter, useIncrementCounter} from "../_server/queries";
 import styled from "styled-components";
+import {BlueButton} from "./BlueButton";
 
-// Styled components for Counter
 const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background: #f5f5f5;
 `;
 
 const Content = styled.div`
   text-align: center;
   background-color: #ffffff;
-  padding: 20px;
+  padding: 1rem;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  max-width: 300px;
 `;
 
 const Title = styled.h1`
@@ -31,23 +28,6 @@ const CounterText = styled.p`
   margin: 0;
 `;
 
-const IncrementButton = styled.button`
-  background-color: #0074d9;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  font-size: 18px;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: #0056b3;
-  }
-`;
-
-// Counter component
 const Counter = () => {
   const {loading, error, data, refetch} = useGetCounter();
   const [incrementCounter] = useIncrementCounter();
@@ -77,12 +57,12 @@ const Counter = () => {
         <CounterText role="status" aria-live="polite">
           Counter: {counterValue}
         </CounterText>
-        <IncrementButton
+        <BlueButton
           onClick={handleIncrement}
           aria-label="Increment the counter"
         >
           Increment
-        </IncrementButton>
+        </BlueButton>
       </Content>
     </Container>
   );

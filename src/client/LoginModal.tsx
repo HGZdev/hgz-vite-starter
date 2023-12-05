@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {useLogin} from "../_server/queries";
 import styled from "styled-components";
+import {setCookie} from "./helpers.ts";
 
 const ModalBackground = styled.div`
   position: fixed;
@@ -76,7 +77,11 @@ const LoginModal: React.FC<LoginModalProps> = ({onClose}) => {
     try {
       const {data} = await login({email, password});
       const token = data?.login?.token;
-      if (token) onClose();
+
+      if (token) {
+        setCookie("token", token, 1);
+        onClose();
+      }
     } catch (err) {
       if (err instanceof Error) setErrorMessage(err.message); // Error handling
     }

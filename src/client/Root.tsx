@@ -4,6 +4,7 @@ import LandingPage from "./LandingPage";
 import ApolloProvider from "./ApolloProvider";
 import Registration from "./Registration";
 import ErrorPage from "./ErrorPage";
+import GlobalStyles from "./globalStyles";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,7 @@ const router = createBrowserRouter([
 const Root: React.FC = () => {
   return (
     <ApolloProvider>
+      <GlobalStyles />
       <RouterProvider router={router} />
     </ApolloProvider>
   );
