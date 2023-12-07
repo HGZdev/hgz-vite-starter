@@ -21,7 +21,7 @@ export const makeApolloProvider = (config: Config) => {
 
   const link = createHttpLink({
     uri: URI, // Server URL (must be absolute)
-    credentials: "include", // pair with cors middleware credentials: true" for cookies to work
+    credentials: "include", // required to pass cookies from CORS, as client operates on different port.
   });
 
   const client = new ApolloClient({

@@ -30,8 +30,8 @@ await apolloServer.start();
 
 // enable cors
 const corsOptions = {
-  origin: URL, // Browser URL
-  credentials: true, // requires ApolloClient to be configured with `credentials: 'include'` for cookies to work
+  origin: URL, // Client URL (frontend)
+  credentials: true, // required to pass cookies from CORS, as server operates on different port.
 };
 
 app.use(

@@ -146,7 +146,7 @@ const schema = {
               const hashedPassword = await bcrypt.hash(args.password, 10);
 
               context.db.get(
-                "SELECT id, FROM users WHERE email = ?",
+                "SELECT id FROM users WHERE email = ?",
                 [args.email],
                 (err, row: {id: number}) => {
                   if (err) {
@@ -286,6 +286,7 @@ const schema = {
 
               context.res.cookie("token", token, {
                 maxAge: 1000 * 60 * 60, // 1 hour,
+                httpOnly: true,
                 secure: true,
               });
 
@@ -304,6 +305,33 @@ const schema = {
       ) => {
         context.res.clearCookie("token");
         return true;
+      },
+    },
+    checkUserExists: {
+      type: GraphQLBoolean,
+      args: {
+        email: {type: GraphQLString},
+      },
+      resolve: async (
+        _root: unknown,
+        args: {email?: string},
+        context: GraphQLResolverContext
+      ) => {
+        return new Promise<boolean>((resolve, reject) => {
+          if (!args.email) {
+            reject(new Error("No valid argument provided for user query"));
+            return;
+          }
+
+          context.db.get(
+            `SELECT * FROM users WHERE email = ?`,
+            [args.email],
+            (err: Error | null, row: UserRow) => {
+              if (err) reject(err);
+              else resolve(!!row);
+            }
+          );
+        });
       },
     },
   },

@@ -1,6 +1,6 @@
 import React, {useState, FormEvent} from "react";
 import styled from "styled-components";
-import {useSaveUser} from "../_server/queries";
+import {useCheckUserExists, useSaveUser} from "../_server/queries";
 
 const RegistrationContainer = styled.div`
   display: flex;
@@ -39,9 +39,12 @@ const Registration: React.FC = () => {
   const [error, setError] = useState("");
 
   const [saveUser, {loading}] = useSaveUser();
+  const [checkUserExists] = useCheckUserExists();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setError("");
+
     if (!email || !password || !firstName || !lastName) {
       setError("Please enter all required fields");
       return;
@@ -53,18 +56,28 @@ const Registration: React.FC = () => {
       return;
     }
     // Regex validation for password format
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}/;
     if (!passwordRegex.test(password)) {
       setError(
         "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number"
       );
       return;
     }
+
+    if (email) {
+      const {data} = await checkUserExists({email});
+
+      if (data?.checkUserExists) {
+        setError("A user with this email already exists.");
+        return;
+      }
+    }
+
     try {
-      const saved = await saveUser({email, firstName, lastName, password});
+      const savedUser = await saveUser({email, firstName, lastName, password});
 
       // Handle successful registration
-      if (saved) {
+      if (savedUser) {
         setEmail("");
         setFirstName("");
         setLastName("");

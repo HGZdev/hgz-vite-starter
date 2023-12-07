@@ -37,11 +37,10 @@ const LandingPage: React.FC = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const {data, loading, error} = useGetUserMe();
 
-  // @ts-ignore
-  const getUserMe = data?.getUserMe;
-  console.log("getUserMe:", getUserMe);
-  if (loading) return <p>Loading...</p>;
+  if (!data && loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
+
+  const getUserMe = data?.getUserMe;
 
   if (showLoginModal)
     return <LoginModal onClose={() => setShowLoginModal(false)} />;

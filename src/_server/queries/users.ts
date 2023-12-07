@@ -155,7 +155,7 @@ export const useLogin = makeMutationHook<LoginTData, LoginTVariables>(
   }
 );
 
-// For login
+// For log
 type LogoutTData = {
   logout: boolean;
 };
@@ -172,3 +172,24 @@ export const useLogout = makeMutationHook<LogoutTData, LogoutTVariables>(
     refetchQueries: ["getUserMe", "getUser", "getUsers"],
   }
 );
+
+// For checkUserExists
+type CheckUserExistsTData = {
+  checkUserExists: boolean;
+};
+type CheckUserExistsTVariables = {
+  email: string;
+};
+
+const checkUserExistsGQL = makeGQL({
+  name: "checkUserExists",
+  operationType: "mutation",
+  args: {
+    email: "String!",
+  },
+});
+
+export const useCheckUserExists = makeMutationHook<
+  CheckUserExistsTData,
+  CheckUserExistsTVariables
+>(checkUserExistsGQL);
