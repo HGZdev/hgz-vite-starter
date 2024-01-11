@@ -60,20 +60,19 @@ interface FormProps {
   validators?: Validators;
 }
 
+type handleFieldValidationProps = {
+  fieldValue: string;
+  validators?: Validators;
+  validate?: string[];
+  required?: boolean;
+};
+
 const handleFieldValidation = ({
-  fieldId,
   fieldValue,
   validators = defaultValidators,
-  validate?,
-  required?,
-}: {
-  fieldId: string,
-  fieldValue: string,
-  validators: Validators,
-  validate?: string[],
-  required?: boolean // Include the required prop
-
-} )=> {
+  validate,
+  required,
+}: handleFieldValidationProps) => {
   let fieldError: string | null = null;
 
   // Include "required" rule if the field is required
@@ -87,11 +86,7 @@ const handleFieldValidation = ({
     }
   }
 
-  // Update the field errors state
-  setFieldErrors((prevState) => ({
-    ...prevState,
-    [fieldId]: fieldError || "", // Store the error message or an empty string if no error
-  }));
+  return fieldError;
 };
 
 // Input Component
@@ -106,11 +101,17 @@ export const Input: FC<InputProps> = ({
   label = id,
   ariaLabel = label || id,
 }) => {
-  const [fieldError, setFieldError] = useState();
-  const handleBlur = (e) => {
-    const err = handleFieldValidation(id, value, validate, required);
+  const [fieldError, setFieldError] = useState<string | null>(null);
 
-    onBlur?.(e);
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const fieldErr = handleFieldValidation({
+      fieldValue: value,
+      validate,
+      required,
+    });
+
+    setFieldError(fieldErr);
+    onBlur && onBlur(e);
   };
 
   return (
@@ -120,20 +121,21 @@ export const Input: FC<InputProps> = ({
         type={type}
         id={id}
         value={value}
-        onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(e)}
+        onChange={onChange}
         onBlur={handleBlur}
         aria-label={ariaLabel}
         required={required}
       />
-      {/* <ErrorLabel>{fieldError}</ErrorLabel> */}
+      {fieldError && <ErrorLabel>{fieldError}</ErrorLabel>}
     </>
   );
 };
 
 // Form Component
-export const Form: FC<FormProps> = ({onSubmit, children}) => {
-  // State to track validation status of each field
-  const [fieldErrors, setFieldErrors] = useState<{[key: string]: string}>({});
+export const Form: FC<FormProps> = ({onSubmit, children, ...rest}) => {
+  const [fieldErrorsObj, setFieldErrorsObj] = useState<Record<string, string>>(
+    {}
+  );
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -142,21 +144,28 @@ export const Form: FC<FormProps> = ({onSubmit, children}) => {
     React.Children.forEach(children, (child) => {
       if (React.isValidElement(child) && child.type === Input) {
         const childProps = child.props as InputProps;
-        if (childProps && childProps.id) {
-          handleFieldValidation(
-            childProps.id,
-            childProps.value,
-            childProps.validate,
-            childProps.required
-          );
+        if (childProps?.id) {
+          const fieldError = handleFieldValidation({
+            ...rest,
+            fieldValue: childProps.value,
+            validate: childProps.validate,
+            required: childProps.required,
+          });
+
+          setFieldErrorsObj((prevState) => ({
+            ...prevState,
+            [childProps.id]: fieldError || "",
+          }));
         }
       }
     });
 
+    console.log("fieldErrorsObj:", fieldErrorsObj);
     // Check if any field has validation errors
-    const hasErrors = Object.values(fieldErrors).some((error) => {
-      return error !== "";
-    });
+    const hasErrors = Object.values(fieldErrorsObj).some(
+      (error) => error !== ""
+    );
+    console.log("hasErrors:", hasErrors);
 
     // If there are no errors, call the onSubmit function
     if (!hasErrors) {
@@ -164,43 +173,9 @@ export const Form: FC<FormProps> = ({onSubmit, children}) => {
     }
   };
 
-  // Recursive function to clone children and pass additional props
-  const renderChildren = (children: ReactNode): ReactNode =>
-    React.Children.map(children, (child) => {
-      if (React.isValidElement(child)) {
-        // Check if the child is an Input component
-        if (child.type === Input) {
-          const childProps = child.props as InputProps;
-          if (childProps && childProps.id) {
-            // If it's an Input component, pass additional props for validation
-            return React.cloneElement(child, {
-              // onBlur: () =>
-              //   handleFieldValidation(
-              //     childProps.id,
-              //     childProps.value,
-              //     childProps.validate
-              //   ),
-              // fieldError: fieldErrors[childProps.id] || "",
-            });
-          }
-        }
-      }
-      // If it's not an Input component, continue to render its children
-      if (React.isValidElement(child)) {
-        const childElement = child as React.ReactElement;
-        return React.cloneElement(childElement, {
-          children: renderChildren(childElement.props.children),
-        });
-      }
-      return child;
-    });
-
   return (
     <FormContainer>
-      <StyledForm onSubmit={handleSubmit}>
-        {/* Render children with additional props */}
-        {renderChildren(children)}
-      </StyledForm>
+      <StyledForm onSubmit={handleSubmit}>{children}</StyledForm>
     </FormContainer>
   );
 };

@@ -79,7 +79,6 @@ const Registration: FC = () => {
         value={firstName}
         onChange={(e) => setFirstName(e.target.value)}
         label="First Name"
-        required
       />
       <Input
         type="text"
