@@ -1,37 +1,10 @@
-import React, {useState, FormEvent} from "react";
-import styled from "styled-components";
+import {useState, FormEvent, FC} from "react";
 import {useCheckUserExists, useSaveUser} from "../_server/queries";
+import {ErrorLabel, Input, SubmitButton, Form} from "./Form/Form";
+import {validators} from "./Form/validators";
 
-const RegistrationContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const RegistrationForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const RegistrationLabel = styled.label`
-  margin-bottom: 0.5rem;
-`;
-
-const RegistrationInput = styled.input`
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-`;
-
-const RegistrationButton = styled.button`
-  padding: 0.5rem 1rem;
-`;
-
-const RegistrationError = styled.p`
-  color: red;
-`;
-
-const Registration: React.FC = () => {
+// Registration Component
+const Registration: FC = () => {
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -49,18 +22,16 @@ const Registration: React.FC = () => {
       setError("Please enter all required fields");
       return;
     }
-    // Regex validation for email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setError("Please enter a valid email address");
+    const emailValidationResult = validators.email(email);
+    const passwordValidationResult = validators.password(password);
+
+    if (emailValidationResult) {
+      setError(emailValidationResult);
       return;
     }
-    // Regex validation for password format
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}/;
-    if (!passwordRegex.test(password)) {
-      setError(
-        "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number"
-      );
+
+    if (passwordValidationResult) {
+      setError(passwordValidationResult);
       return;
     }
 
@@ -92,51 +63,45 @@ const Registration: React.FC = () => {
   };
 
   return (
-    <RegistrationContainer>
+    <Form onSubmit={handleSubmit}>
       <h2>Registration Form</h2>
-      <RegistrationForm onSubmit={handleSubmit}>
-        <RegistrationLabel htmlFor="email">Email:</RegistrationLabel>
-        <RegistrationInput
-          type="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          aria-label="Email"
-          required
-        />
-        <RegistrationLabel htmlFor="firstName">First Name:</RegistrationLabel>
-        <RegistrationInput
-          type="text"
-          id="firstName"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-          aria-label="First Name"
-          required
-        />
-        <RegistrationLabel htmlFor="lastName">Last Name:</RegistrationLabel>
-        <RegistrationInput
-          type="text"
-          id="lastName"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-          aria-label="Last Name"
-          required
-        />
-        <RegistrationLabel htmlFor="password">Password:</RegistrationLabel>
-        <RegistrationInput
-          type="password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          aria-label="Password"
-          required
-        />
-        <RegistrationButton type="submit" disabled={loading}>
-          Register
-        </RegistrationButton>
-      </RegistrationForm>
-      {error && <RegistrationError>{error}</RegistrationError>}
-    </RegistrationContainer>
+      <Input
+        type="email"
+        id="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        label="Email"
+        required
+      />
+      <Input
+        type="text"
+        id="firstName"
+        value={firstName}
+        onChange={(e) => setFirstName(e.target.value)}
+        label="First Name"
+        required
+      />
+      <Input
+        type="text"
+        id="lastName"
+        value={lastName}
+        onChange={(e) => setLastName(e.target.value)}
+        label="Last Name"
+        required
+      />
+      <Input
+        type="password"
+        id="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        label="Password"
+        required
+      />
+      <SubmitButton type="submit" disabled={loading}>
+        Register
+      </SubmitButton>
+      {error && <ErrorLabel>{error}</ErrorLabel>}
+    </Form>
   );
 };
 

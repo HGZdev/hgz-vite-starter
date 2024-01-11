@@ -8,9 +8,17 @@ import {
 
 const {PROD} = import.meta.env;
 
+interface Config {
+  PROD_HOST_URL: string;
+  LOCAL_HOST_URL: string;
+  LOCAL_SERVER_PORT: number;
+  GRAPHQL_DIR: string;
+}
+
 export const makeApolloProvider = (config: Config) => {
   const {PROD_HOST_URL, LOCAL_HOST_URL, LOCAL_SERVER_PORT, GRAPHQL_DIR} =
     config;
+
   const cache = new InMemoryCache();
 
   const BASE_URL = PROD

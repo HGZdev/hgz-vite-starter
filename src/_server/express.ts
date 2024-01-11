@@ -28,15 +28,12 @@ const apolloServer = await makeApolloServer({
 
 await apolloServer.start();
 
-// enable cors
-const corsOptions = {
-  origin: URL, // Client URL (frontend)
-  credentials: true, // required to pass cookies from CORS, as server operates on different port.
-};
-
 app.use(
   GRAPHQL_DIR,
-  cors(corsOptions),
+  cors({
+    origin: URL, // Client URL (frontend)
+    credentials: true, // required to pass cookies from CORS, as server operates on different port.
+  }),
   express.json(),
   expressMiddleware(apolloServer, {
     context: async ({req, res}) => {
