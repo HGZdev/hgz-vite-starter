@@ -15,6 +15,7 @@ const Registration: FC = () => {
   const handleSubmit = async (values: Record<string, InputValue>) => {
     setError("");
 
+    console.log("values:", values);
     // Check if user with this email already exists
     if (values.email) {
       const {data} = await checkUserExists({email: values.email as string});
@@ -41,7 +42,15 @@ const Registration: FC = () => {
   };
 
   return (
-    <Form onSubmit={handleSubmit} onError={setError}>
+    <Form
+      onSubmit={handleSubmit}
+      onError={setError}
+      initialValues={{
+        email: "h.gaudasinska@gmail.com",
+        firstName: "Hanna",
+        lastName: "Gaudasińska-Zapaśnik",
+      }}
+    >
       <h2>Registration Form</h2>
       <Input
         type="email"
