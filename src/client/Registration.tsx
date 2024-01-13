@@ -1,42 +1,23 @@
-import {useState, FormEvent, FC} from "react";
-import {useCheckUserExists, useSaveUser} from "../_server/queries";
-import {ErrorLabel, Input, SubmitButton, Form} from "./Form/Form";
-import {validators} from "./Form/validators";
+import {useState, FC} from "react";
+import {
+  SaveUserTVariables,
+  useCheckUserExists,
+  useSaveUser,
+} from "../_server/queries";
+import {ErrorLabel, Input, SubmitButton, Form, InputValue} from "./Form/Form";
 
-// Registration Component
 const Registration: FC = () => {
-  const [email, setEmail] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const [saveUser, {loading}] = useSaveUser();
   const [checkUserExists] = useCheckUserExists();
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (values: Record<string, InputValue>) => {
     setError("");
 
-    if (!email || !password || !firstName || !lastName) {
-      setError("Please enter all required fields");
-      return;
-    }
-    const emailValidationResult = validators.email(email);
-    const passwordValidationResult = validators.password(password);
-
-    if (emailValidationResult) {
-      setError(emailValidationResult);
-      return;
-    }
-
-    if (passwordValidationResult) {
-      setError(passwordValidationResult);
-      return;
-    }
-
-    if (email) {
-      const {data} = await checkUserExists({email});
+    // Check if user with this email already exists
+    if (values.email) {
+      const {data} = await checkUserExists({email: values.email as string});
 
       if (data?.checkUserExists) {
         setError("A user with this email already exists.");
@@ -45,14 +26,11 @@ const Registration: FC = () => {
     }
 
     try {
-      const savedUser = await saveUser({email, firstName, lastName, password});
+      // Save user
+      const savedUser = await saveUser(values as SaveUserTVariables);
 
       // Handle successful registration
       if (savedUser) {
-        setEmail("");
-        setFirstName("");
-        setLastName("");
-        setPassword("");
         setError("");
         window.location.href = "/";
       }
@@ -63,38 +41,25 @@ const Registration: FC = () => {
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit} onError={setError}>
       <h2>Registration Form</h2>
       <Input
         type="email"
         id="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
         label="Email"
         required
+        validate={["email"]}
+        autoComplete="username"
       />
-      <Input
-        type="text"
-        id="firstName"
-        value={firstName}
-        onChange={(e) => setFirstName(e.target.value)}
-        label="First Name"
-      />
-      <Input
-        type="text"
-        id="lastName"
-        value={lastName}
-        onChange={(e) => setLastName(e.target.value)}
-        label="Last Name"
-        required
-      />
+      <Input type="text" id="firstName" label="First Name" />
+      <Input type="text" id="lastName" label="Last Name" required />
       <Input
         type="password"
         id="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
         label="Password"
         required
+        validate={["password"]}
+        autoComplete="current-password"
       />
       <SubmitButton type="submit" disabled={loading}>
         Register

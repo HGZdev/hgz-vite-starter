@@ -12,6 +12,7 @@ describe("Form validators", () => {
 
     const emailVariants: Record<string, string | null> = {
       // Valid email variants
+      "bubu@interia.pl": null,
       "email@domain.com": null,
       "email123@domain.com": null,
       "email-with-hyphen@domain.com": null,

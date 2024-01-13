@@ -1,13 +1,13 @@
 import React, {
-  FormEvent,
   ChangeEvent,
   FC,
   ReactNode,
   useState,
   FocusEventHandler,
+  useEffect,
 } from "react";
 import styled from "styled-components";
-import {validators as defaultValidators} from "./validators";
+import {validators as defaultValidators, Validators} from "./validators";
 
 // Styled Components
 const FormContainer = styled.div`
@@ -35,51 +35,32 @@ export const SubmitButton = styled.button`
   padding: 0.5rem 1rem;
 `;
 
-export const ErrorLabel = styled.p`
+export const ErrorLabel = styled.span`
   color: red;
 `;
 
-// Prop Types
-interface InputProps {
-  type: string;
-  id: string;
-  value: string;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  onBlur?: FocusEventHandler<HTMLInputElement>;
-  label?: string;
-  required?: boolean;
-  ariaLabel?: string;
-  validate?: string[];
-}
+export type InputValue = string | number | readonly string[] | undefined;
 
-type Validators = Record<string, (value: string) => string | null>;
-
-interface FormProps {
-  onSubmit: (e: FormEvent) => void;
-  children: ReactNode;
-  validators?: Validators;
-}
-
-type handleFieldValidationProps = {
-  fieldValue: string;
+type FieldValidationProps = {
+  value?: InputValue;
   validators?: Validators;
   validate?: string[];
   required?: boolean;
 };
 
 const handleFieldValidation = ({
-  fieldValue,
+  value = undefined,
   validators = defaultValidators,
-  validate,
+  validate = [],
   required,
-}: handleFieldValidationProps) => {
-  let fieldError: string | null = null;
+}: FieldValidationProps) => {
+  let fieldError: string = "";
 
   // Include "required" rule if the field is required
   const rules = required ? [...(validate || []), "required"] : validate;
 
   for (const rule of rules || []) {
-    const validationError = validators[rule](fieldValue);
+    const validationError = validators[rule](value);
     if (validationError) {
       fieldError = validationError;
       break;
@@ -89,28 +70,46 @@ const handleFieldValidation = ({
   return fieldError;
 };
 
+interface InputProps {
+  type: string;
+  id: string;
+  value?: InputValue;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: FocusEventHandler<HTMLInputElement>;
+  label?: string;
+  required?: boolean;
+  ariaLabel?: string;
+  validate?: string[];
+  autoComplete?: string;
+}
 // Input Component
 export const Input: FC<InputProps> = ({
   type,
   id,
-  value,
+  value: upperValue,
   onChange,
   onBlur,
   required,
   validate,
   label = id,
   ariaLabel = label || id,
+  autoComplete,
 }) => {
+  const [value, setValue] = useState<InputValue>();
   const [fieldError, setFieldError] = useState<string | null>(null);
 
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    const fieldErr = handleFieldValidation({
-      fieldValue: value,
-      validate,
-      required,
-    });
+  useEffect(() => {
+    if (upperValue) setValue(upperValue);
+  }, []);
 
-    setFieldError(fieldErr);
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    setFieldError(
+      handleFieldValidation({
+        value,
+        validate,
+        required,
+      })
+    );
     onBlur && onBlur(e);
   };
 
@@ -125,57 +124,100 @@ export const Input: FC<InputProps> = ({
         onBlur={handleBlur}
         aria-label={ariaLabel}
         required={required}
+        autoComplete={autoComplete}
       />
       {fieldError && <ErrorLabel>{fieldError}</ErrorLabel>}
     </>
   );
 };
 
-// Form Component
-export const Form: FC<FormProps> = ({onSubmit, children, ...rest}) => {
-  const [fieldErrorsObj, setFieldErrorsObj] = useState<Record<string, string>>(
-    {}
-  );
+interface FormProps {
+  children: ReactNode;
+  onSubmit: (values: Record<string, InputValue>) => void;
+  onError?: (error: string) => void;
+  showSubmitButton?: boolean;
+}
 
-  const handleSubmit = (e: FormEvent) => {
+// Form Component
+export const Form: FC<FormProps> = ({
+  children,
+  onSubmit,
+  onError,
+  showSubmitButton,
+}) => {
+  const [formValues, setFormValues] = useState<Record<string, InputValue>>({});
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Validate all input fields
+    // Check for field validation errors
+    const validationErrors: Record<string, string> = {};
     React.Children.forEach(children, (child) => {
       if (React.isValidElement(child) && child.type === Input) {
-        const childProps = child.props as InputProps;
-        if (childProps?.id) {
-          const fieldError = handleFieldValidation({
-            ...rest,
-            fieldValue: childProps.value,
-            validate: childProps.validate,
-            required: childProps.required,
+        const {id, validate} = child.props as InputProps;
+        if (id && validate)
+          validationErrors[id] = handleFieldValidation({
+            value: formValues[id],
+            validate,
           });
-
-          setFieldErrorsObj((prevState) => ({
-            ...prevState,
-            [childProps.id]: fieldError || "",
-          }));
-        }
       }
     });
 
-    console.log("fieldErrorsObj:", fieldErrorsObj);
-    // Check if any field has validation errors
-    const hasErrors = Object.values(fieldErrorsObj).some(
-      (error) => error !== ""
-    );
-    console.log("hasErrors:", hasErrors);
-
-    // If there are no errors, call the onSubmit function
-    if (!hasErrors) {
-      onSubmit(e);
+    if (Object.keys(validationErrors).length > 0) {
+      setFieldErrors(validationErrors);
+      return;
     }
+
+    try {
+      // If validation passes, submit the form
+      onSubmit(formValues);
+      setFieldErrors({});
+    } catch (error) {
+      if (onError && error instanceof Error) {
+        onError(error.message);
+      }
+    }
+  };
+
+  const handleInputChange = (id: string, value: string) => {
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [id]: value,
+    }));
+
+    // // Clear field error when user starts typing
+    // setFieldErrors((prevErrors) => ({
+    //   ...prevErrors,
+    //   [id]: "",
+    // }));
   };
 
   return (
     <FormContainer>
-      <StyledForm onSubmit={handleSubmit}>{children}</StyledForm>
+      <StyledForm onSubmit={handleSubmit}>
+        {React.Children.map(children, (child) => {
+          if (React.isValidElement(child) && child.type === Input) {
+            const {id} = child.props as InputProps;
+
+            const newInputProps: Partial<InputProps> = {
+              value: formValues[id] || "",
+              onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+                handleInputChange(id, e.target.value),
+              onBlur: (e: React.FocusEvent<HTMLInputElement>) => {
+                handleInputChange(id, e.target.value);
+              },
+            };
+
+            return React.cloneElement(child, {...child.props, newInputProps});
+          }
+          return child;
+        })}
+        {showSubmitButton && <button type="submit">Submit</button>}
+      </StyledForm>
+      {fieldErrors && (
+        <ErrorLabel>{Object.values(fieldErrors).join("\n")}</ErrorLabel>
+      )}
     </FormContainer>
   );
 };

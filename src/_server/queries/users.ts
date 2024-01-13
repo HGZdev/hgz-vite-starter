@@ -76,7 +76,7 @@ export const useGetUserMe = makeQueryHook<GetUserMeTData, GetUserMeTVariables>(
 type SaveUserTData = {
   saveUser: UserType;
 };
-type SaveUserTVariables = {
+export type SaveUserTVariables = {
   email: string;
   firstName?: string;
   lastName?: string;
