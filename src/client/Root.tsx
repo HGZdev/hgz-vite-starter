@@ -5,6 +5,7 @@ import config from "../../config/config.ts";
 import Registration from "./Registration";
 import ErrorPage from "./ErrorPage";
 import {makeApolloProvider} from "../../lib/apollo/ApolloClient.tsx";
+import GlobalStyles from "./GlobalStyles.ts";
 // import GlobalStyles from "./globalStyles.ts";
 
 const ApolloProvider = makeApolloProvider(config);
@@ -24,7 +25,7 @@ const router = createBrowserRouter([
 const Root: React.FC = () => {
   return (
     <ApolloProvider>
-      {/* <GlobalStyles /> */}
+      <GlobalStyles />
       <RouterProvider router={router} />
     </ApolloProvider>
   );

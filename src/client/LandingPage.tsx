@@ -1,10 +1,11 @@
 import React, {useState} from "react";
-import styled from "styled-components";
+import {Button, CircularProgress, Typography, Avatar} from "@mui/material";
 import {useGetUserMe} from "../_server/queries";
 import LoginModal from "./LoginModal";
 import Dashboard from "./Dashboard";
+import styled from "styled-components";
 
-const LandingPageContainer = styled.div`
+const LandingPageContainer = styled("div")`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -12,55 +13,62 @@ const LandingPageContainer = styled.div`
   height: 100vh;
 `;
 
-const SignupButton = styled.button`
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+const ButtonContainer = styled("div")`
+  display: flex;
+  flex-direction: row; /* Change this line to set buttons in one line */
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
 `;
 
-const LoginButton = styled.button`
-  margin-top: 10px;
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #28a745;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-`;
+const SignupButton = styled(Button)``;
+const LoginButton = styled(Button)``;
 
 const LandingPage: React.FC = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const {data, loading, error} = useGetUserMe();
 
-  if (!data && loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+  if (!data && loading) return <CircularProgress aria-label="Loading" />;
+  if (error) return <Typography>Error: {error.message}</Typography>;
 
   const getUserMe = data?.getUserMe;
 
   if (showLoginModal)
-    return <LoginModal onClose={() => setShowLoginModal(false)} />;
+    return (
+      <LoginModal
+        open={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+      />
+    );
 
   return (
     <LandingPageContainer>
       {!getUserMe ? (
         <>
-          <SignupButton
-            aria-label="Sign up"
-            onClick={() => (window.location.href = "/registration")}
-          >
-            Sign up
-          </SignupButton>
-          <LoginButton
-            aria-label="Login"
-            onClick={() => setShowLoginModal(true)}
-          >
-            Log in
-          </LoginButton>
+          <Avatar
+            alt="Favicon"
+            src="/../assets/favicon.ico"
+            sx={{width: 250, height: 250}}
+          />
+
+          <ButtonContainer>
+            <SignupButton
+              variant="contained"
+              color="primary"
+              onClick={() => (window.location.href = "/registration")}
+              aria-label="Sign up"
+            >
+              Sign up
+            </SignupButton>
+            <LoginButton
+              variant="contained"
+              color="secondary"
+              onClick={() => setShowLoginModal(true)}
+              aria-label="Log in"
+            >
+              Log in
+            </LoginButton>
+          </ButtonContainer>
         </>
       ) : (
         <Dashboard />

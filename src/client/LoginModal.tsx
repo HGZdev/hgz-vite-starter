@@ -1,120 +1,110 @@
 import React, {useState} from "react";
+import * as Yup from "yup";
+import {InputField} from "./Form/Form";
+import {Form, Formik} from "formik";
 import {useLogin} from "../_server/queries";
-import styled from "styled-components";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Typography,
+  Box, // Import Box from @mui/material to use flexbox
+} from "@mui/material";
+import {Link} from "react-router-dom";
 
-const ModalBackground = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.8);
-`;
+// Define validation schema
+const validationSchema = Yup.object().shape({
+  email: Yup.string().required("Email is required"),
+  password: Yup.string().required("Password is required"),
+});
 
-const ModalContent = styled.div`
-  background-color: white;
-  padding: 2rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
-  width: 100%;
-  max-width: 24rem;
-`;
+// Define types for user data
+interface UserData {
+  email: string;
+  password: string;
+}
 
-const FormGroup = styled.div`
-  margin-bottom: 1.5rem;
-`;
-
-const Label = styled.label`
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: bold;
-  color: #4a5568;
-`;
-
-const Input = styled.input`
-  width: calc(100% - 1rem);
-  padding: 0.5rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 0.25rem;
-`;
-
-const ErrorMessage = styled.div`
-  color: #ef4444;
-  margin-bottom: 1rem;
-`;
-
-const SubmitButton = styled.button`
-  width: 100%;
-  padding: 1rem;
-  background-color: #2563eb;
-  color: white;
-  border-radius: 0.25rem;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #1d4ed8;
-  }
-`;
-
-interface LoginModalProps {
+// Define the LoginForm component
+interface LoginFormProps {
   onClose: () => void;
 }
 
-const LoginModal: React.FC<LoginModalProps> = ({onClose}) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
+const LoginForm: React.FC<LoginFormProps> = ({onClose}) => {
   const [login] = useLogin();
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setErrorMessage(null);
-    try {
-      const {data} = await login({email, password});
-      const token = data?.login?.token;
-
-      if (token) {
-        // setCookie("token", token, 1);
-        onClose();
-      }
-    } catch (err) {
-      if (err instanceof Error) setErrorMessage(err.message); // Error handling
-    }
-  };
+  const [loginError, setLoginError] = useState<string | null>(null);
 
   return (
-    <ModalBackground>
-      <ModalContent>
-        <form onSubmit={handleSubmit}>
-          <FormGroup>
-            <Label htmlFor="email">Email:</Label>
-            <Input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label htmlFor="password">Password:</Label>
-            <Input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </FormGroup>
-          {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-          <SubmitButton type="submit">Login</SubmitButton>
-        </form>
-      </ModalContent>
-    </ModalBackground>
+    <Formik<UserData>
+      initialValues={{
+        email: "",
+        password: "",
+      }}
+      validationSchema={validationSchema}
+      onSubmit={async (values) => {
+        try {
+          const {data} = await login(values);
+          const token = data?.login?.token;
+
+          if (token) {
+            onClose();
+          }
+        } catch (error) {
+          setLoginError("Something went wrong");
+          console.error("Error during login:", error);
+        }
+      }}
+    >
+      <Form>
+        <InputField
+          label="Email"
+          name="email"
+          type="email"
+          autoComplete="email"
+        />
+        <InputField
+          label="Password"
+          name="password"
+          type="password"
+          autoComplete="current-password"
+        />
+        {loginError && (
+          <Typography variant="caption" color="error">
+            {loginError}
+          </Typography>
+        )}
+        <DialogActions>
+          <Box flexGrow={1}>
+            <Link to="/registration">
+              <Button color="primary">Sign up</Button>
+            </Link>
+          </Box>
+          <Button onClick={onClose} color="secondary">
+            Cancel
+          </Button>
+          <Button type="submit" variant="contained" color="primary">
+            Login
+          </Button>
+        </DialogActions>
+      </Form>
+    </Formik>
+  );
+};
+
+interface LoginModalProps {
+  onClose: () => void;
+  open: boolean;
+}
+
+const LoginModal: React.FC<LoginModalProps> = ({onClose, open}) => {
+  return (
+    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+      <DialogTitle>Login</DialogTitle>
+      <DialogContent>
+        <LoginForm onClose={onClose} />
+      </DialogContent>
+    </Dialog>
   );
 };
 

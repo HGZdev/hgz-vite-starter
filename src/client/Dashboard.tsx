@@ -1,32 +1,22 @@
+import {Button, Typography, Container} from "@mui/material";
 import {useGetUserMe, useLogout} from "../_server/queries";
-import {BlueButton} from "./BlueButton.tsx";
-import Counter from "./Counter.tsx";
-// import {destroyCookie} from "./helpers.ts";
+import Counter from "./Counter";
 import styled from "styled-components";
 
-const FlexContainer = styled.div`
+const FlexContainer = styled(Container)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  height: 100vh;
 `;
 
-const FlexBox = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 10px;
-`;
-
-const Title = styled.h1`
-  font-size: 24px;
+const Title = styled(Typography)`
   margin-bottom: 20px;
 `;
 
-const LogoutButton = styled(BlueButton)`
-  position: absolute;
-  top: 10px;
-  right: 10px;
+const LogoutButton = styled(Button)`
+  align-self: flex-end;
+  margin-top: 20px;
 `;
 
 const Dashboard = () => {
@@ -34,19 +24,36 @@ const Dashboard = () => {
   const [logout] = useLogout();
 
   const handleLogout = async () => {
-    // const {data} =
     await logout();
-    // if (data?.logout) destroyCookie("token");
   };
 
-  if (!data && loading) return <FlexBox>Loading...</FlexBox>;
-  if (error) return <FlexBox>Error: {error.message}</FlexBox>;
+  if (!data && loading)
+    return (
+      <FlexContainer aria-busy="true" aria-live="polite">
+        Loading...
+      </FlexContainer>
+    );
+  if (error)
+    return (
+      <FlexContainer aria-live="assertive">
+        Error: {error.message}
+      </FlexContainer>
+    );
 
   return (
     <FlexContainer>
-      <Title>Welcome to the Dashboard!</Title>
-      <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
-      <Counter />
+      <LogoutButton
+        variant="contained"
+        color="primary"
+        onClick={handleLogout}
+        aria-label="Logout Button"
+      >
+        Logout
+      </LogoutButton>
+      <div>
+        <Title variant="h4">Welcome to the Dashboard!</Title>
+        <Counter />
+      </div>
     </FlexContainer>
   );
 };

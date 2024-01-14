@@ -1,67 +1,22 @@
-import React, {ReactNode} from "react";
-import {
-  Formik,
-  Form,
-  Field,
-  ErrorMessage,
-  FieldValidator,
-  FormikValues,
-} from "formik";
+import React from "react";
 import * as Yup from "yup";
+import {FormikForm, InputField} from "./Form/Form";
 import {useCheckUserExists, useSaveUser} from "../_server/queries";
+import Button from "@mui/material/Button";
+import styled from "styled-components";
+import {Link} from "react-router-dom";
 
-// Define types for the InputField props
-interface InputFieldProps {
-  label: string;
-  name: string;
-  type: string;
-  validate?: FieldValidator;
-}
+const Container = styled.div`
+  padding: 1rem; /* Default padding for mobile devices */
 
-// Define InputField component with types
-const InputField: React.FC<InputFieldProps> = ({
-  label,
-  name,
-  type,
-  validate,
-  ...props
-}) => {
-  return (
-    <div>
-      <label>{label}:</label>
-      <Field type={type} name={name} validate={validate} {...props} />
-      <ErrorMessage name={name} component="div" />
-    </div>
-  );
-};
+  @media (min-width: 600px) {
+    padding: 1rem 20%; /* Adjust padding for larger screens */
+  }
 
-// Define the FormikFormProps with a generic type argument
-interface FormikFormProps<FormValues extends FormikValues> {
-  initialValues: FormValues;
-  onSubmit: (values: FormValues) => Promise<void> | void;
-  validationSchema?: Yup.Schema;
-  children?: ReactNode;
-}
-
-// Define the FormikForm component as a generic component
-const FormikForm: <FormValues extends FormikValues>(
-  props: FormikFormProps<FormValues>
-) => React.ReactElement<FormikFormProps<FormValues>> = ({
-  initialValues,
-  onSubmit,
-  validationSchema,
-  children,
-}) => {
-  return (
-    <Formik
-      initialValues={initialValues}
-      onSubmit={onSubmit}
-      validationSchema={validationSchema}
-    >
-      <Form>{children}</Form>
-    </Formik>
-  );
-};
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
 
 // Define validation schema
 const validationSchema = Yup.object().shape({
@@ -72,6 +27,9 @@ const validationSchema = Yup.object().shape({
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}/,
       "Password must contain at least one lowercase letter, one uppercase letter, one digit, and be at least 8 characters long"
     ),
+  confirmPassword: Yup.string()
+    .required("Passwords must be confirmed")
+    .oneOf([Yup.ref("password")], "Passwords must match"),
   firstName: Yup.string().required("First name is required"),
   lastName: Yup.string().required("Last name is required"),
 });
@@ -83,6 +41,7 @@ interface UserData {
   firstName: string;
   lastName: string;
 }
+
 // Define the RegistrationForm component
 const RegistrationForm: React.FC = () => {
   const [checkUserExists] = useCheckUserExists();
@@ -93,13 +52,13 @@ const RegistrationForm: React.FC = () => {
     email: string
   ) => Promise<string | undefined> = async (email: string) => {
     try {
-      // Check if the user exists asynchronously
-      const {data} = await checkUserExists({email});
-      if (data?.checkUserExists) {
-        return "User with this email already exists";
+      if (email) {
+        const {data} = await checkUserExists({email});
+        if (data?.checkUserExists) {
+          return "User with this email already exists";
+        }
       }
     } catch (error) {
-      // Handle other errors
       console.error("Error during user existence check:", error);
     }
     return undefined;
@@ -116,11 +75,9 @@ const RegistrationForm: React.FC = () => {
       validationSchema={validationSchema}
       onSubmit={async (values) => {
         try {
-          // Save the user
           await saveUser(values);
           window.location.href = "/";
         } catch (error) {
-          // Handle other errors
           console.error("Error during registration:", error);
         }
       }}
@@ -130,16 +87,60 @@ const RegistrationForm: React.FC = () => {
         name="email"
         type="email"
         validate={checkUserExistsAsync}
+        autoComplete="email"
+        aria-label="Email Input"
       />
-      <InputField label="Password" name="password" type="password" />
-      <InputField label="First Name" name="firstName" type="text" />
-      <InputField label="Last Name" name="lastName" type="text" />
-
-      <div>
-        <button type="submit">Register</button>
-      </div>
+      <InputField
+        label="Password"
+        name="password"
+        type="password"
+        autoComplete="new-password"
+        aria-label="Password Input"
+      />
+      <InputField
+        label="ConfirmPassword"
+        name="confirmPassword"
+        type="text"
+        autoComplete="new-password"
+        aria-label="Confirm Password Input"
+      />
+      <InputField
+        label="First name"
+        name="firstName"
+        type="text"
+        autoComplete="given-name"
+        aria-label="First Name Input"
+      />
+      <InputField
+        label="Last name"
+        name="lastName"
+        type="text"
+        autoComplete="family-name"
+        aria-label="Last Name Input"
+      />
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        aria-label="Register Button"
+      >
+        Register
+      </Button>
     </FormikForm>
   );
 };
 
-export default RegistrationForm;
+const Registration = () => {
+  return (
+    <Container>
+      <Link to="/">
+        <Button color="primary" startIcon={"<"} aria-label="Back Button">
+          Back
+        </Button>
+      </Link>
+      <RegistrationForm />
+    </Container>
+  );
+};
+
+export default Registration;
