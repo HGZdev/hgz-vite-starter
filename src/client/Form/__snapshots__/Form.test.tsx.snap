@@ -1,0 +1,35 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`renders and submits the FormikForm component with InputField 1`] = `
+[MockFunction spy] {
+  "calls": [
+    [
+      {
+        "firstName": "John",
+        "lastName": "Doe",
+      },
+      {
+        "resetForm": [Function],
+        "setErrors": [Function],
+        "setFieldError": [Function],
+        "setFieldTouched": [Function],
+        "setFieldValue": [Function],
+        "setFormikState": [Function],
+        "setStatus": [Function],
+        "setSubmitting": [Function],
+        "setTouched": [Function],
+        "setValues": [Function],
+        "submitForm": [Function],
+        "validateField": [Function],
+        "validateForm": [Function],
+      },
+    ],
+  ],
+  "results": [
+    {
+      "type": "return",
+      "value": undefined,
+    },
+  ],
+}
+`;

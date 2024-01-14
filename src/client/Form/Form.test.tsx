@@ -1,151 +1,80 @@
-// import {describe, it, expect, vi} from "vitest";
-// import {Form, Input, SubmitButton} from "./Form";
-// import {render, fireEvent} from "@testing-library/react";
+import {render, screen, waitFor} from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import {expect, test, vi} from "vitest";
+import {FormikForm, InputField} from "./Form";
+import * as Yup from "yup";
 
-// // Mock function for onSubmit
-// const onSubmitMock = vi.fn();
+test("renders and submits the FormikForm component with InputField", async () => {
+  const handleSubmit = vi.fn();
+  interface UserData {
+    firstName: string;
+    lastName: string;
+  }
 
-// // Test suite for Input component
-// describe("Input Component Tests", () => {
-//   // Test case for rendering Input component
-//   it("should render Input component with label", () => {
-//     const {container} = render(
-//       <Input
-//         type="text"
-//         id="username"
-//         value=""
-//         onChange={() => {}}
-//         label="Username"
-//         required
-//       />
-//     );
+  const initialValues = {firstName: "", lastName: ""};
 
-//     // Example assertion using vitest
-//     expect(container.querySelector('label[for="username"]')).toBeTruthy();
-//   });
+  render(
+    <FormikForm<UserData> onSubmit={handleSubmit} initialValues={initialValues}>
+      <InputField label="First Name" name="firstName" type="text" />
+      <InputField label="Last Name" name="lastName" type="text" />
+      <button type="submit">Submit</button>
+    </FormikForm>
+  );
 
-//   // Test case for input change
-//   it("should call onChange when input value changes", () => {
-//     const onChangeMock = vi.fn();
-//     const {getByLabelText} = render(
-//       <Input
-//         type="text"
-//         id="username"
-//         value=""
-//         onChange={onChangeMock}
-//         label="Username"
-//         required
-//       />
-//     );
+  const user = userEvent.setup();
+  await user.type(screen.getByLabelText(/First Name/i), "John");
+  await user.type(screen.getByLabelText(/Last Name/i), "Doe");
+  await user.click(screen.getByRole("button", {name: /submit/i}));
 
-//     const inputElement = getByLabelText("Username");
-//     fireEvent.change(inputElement, {target: {value: "USERNAME"}});
+  await waitFor(() => {
+    expect(handleSubmit).toHaveBeenCalledTimes(1);
+    const [submittedValues] = handleSubmit.mock.calls[0];
+    expect(submittedValues).toEqual({
+      firstName: "John",
+      lastName: "Doe",
+    });
+  });
+});
 
-//     expect(onChangeMock).toHaveBeenCalledTimes(1);
-//     expect(onChangeMock).toHaveBeenCalledWith(
-//       expect.objectContaining({target: {value: "USERNAME"}})
-//     );
-//   });
-// });
+test("renders and handles errors in the FormikForm component with InputField", async () => {
+  const handleSubmit = vi.fn();
+  interface UserData {
+    firstName: string;
+    lastName: string;
+  }
+  const initialValues = {
+    firstName: "",
+    lastName: "",
+  };
+  // Define Yup schema for validation
+  const validationSchema = Yup.object({
+    firstName: Yup.string().required("First Name is required"),
+    lastName: Yup.string().required("Last Name is required"),
+  });
 
-// // Test suite for Form component
-// describe("Form Component Tests", () => {
-//   // Test case for rendering Form component
-//   it("should render Form component with onSubmit handler", () => {
-//     const {container} = render(
-//       <Form onSubmit={onSubmitMock}>
-//         <Input
-//           type="text"
-//           id="username"
-//           value=""
-//           onChange={() => {}}
-//           label="Username"
-//           required
-//         />
-//         {/* Add other necessary children components */}
-//         <SubmitButton type="submit">Submit</SubmitButton>
-//       </Form>
-//     );
+  render(
+    <FormikForm<UserData>
+      onSubmit={handleSubmit}
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+    >
+      <InputField label="First Name" name="firstName" type="text" />
+      <InputField label="Last Name" name="lastName" type="text" />
+      <button type="submit">Submit</button>
+    </FormikForm>
+  );
 
-//     // Example assertion using vitest
-//     expect(container.querySelector("form")).toBeTruthy();
-//   });
+  const user = userEvent.setup();
 
-//   // Test case for form submission
-//   it("should call onSubmit when the form is submitted", () => {
-//     const {container} = render(
-//       <Form onSubmit={onSubmitMock}>
-//         <Input
-//           type="text"
-//           id="username"
-//           value=""
-//           onChange={() => {}}
-//           label="Username"
-//           required
-//         />
-//         {/* Add other necessary children components */}
-//         <SubmitButton type="submit">Submit</SubmitButton>
-//       </Form>
-//     );
+  // Simulate error by not providing a value for the required fields
+  await user.click(screen.getByRole("button", {name: /submit/i}));
 
-//     const formElement = container.querySelector("form") as HTMLFormElement;
+  await waitFor(() => {
+    // Ensure handleSubmit is not called since there are errors
+    expect(handleSubmit).not.toHaveBeenCalled();
 
-//     fireEvent.submit(formElement);
-//     expect(onSubmitMock).toHaveBeenCalledTimes(1);
-//   });
-
-//   // Test case for rendering Form component with children
-//   it("should render Form component with children", () => {
-//     const {getByLabelText, getByText} = render(
-//       <Form onSubmit={onSubmitMock}>
-//         <Input
-//           type="text"
-//           id="username"
-//           value=""
-//           onChange={() => {}}
-//           label="Username"
-//           required
-//         />
-//         <Input
-//           type="password"
-//           id="password"
-//           value=""
-//           onChange={() => {}}
-//           label="Password"
-//           required
-//         />
-//         <SubmitButton type="submit">Submit</SubmitButton>
-//       </Form>
-//     );
-
-//     expect(getByLabelText("Username")).toBeTruthy();
-//     expect(getByLabelText("Password")).toBeTruthy();
-//     expect(getByText("Submit")).toBeTruthy();
-//   });
-
-//   // Test case for handling form submission with validation
-//   it("should not call onSubmit when form is submitted with invalid fields", () => {
-//     const {getByText, getByLabelText} = render(
-//       <Form onSubmit={onSubmitMock}>
-//         <Input
-//           type="text"
-//           id="username"
-//           value=""
-//           onChange={() => {}}
-//           label="Username"
-//           required
-//           validate={["email"]}
-//         />
-//         <SubmitButton type="submit">Submit</SubmitButton>
-//       </Form>
-//     );
-
-//     const formElement = getByText("Submit").closest("form") as HTMLFormElement;
-//     fireEvent.submit(formElement);
-//     // Assert that onSubmitMock has not been called
-//     expect(onSubmitMock).not.toHaveBeenCalled();
-
-//     const errorMessage = getByLabelText("Username").nextSibling;
-//     expect(errorMessage).toEqual("Please enter required field(s)");
-//   });
-// });
+    // Check for error messages
+    expect(screen.getByText(/First Name is required/)).toBeTruthy();
+    expect(screen.getByText(/Last Name is required/)).toBeTruthy();
+  });
+});
