@@ -1,6 +1,6 @@
 import {Button, Typography, Container} from "@mui/material";
-import {useGetUserMe, useLogout} from "../_server/queries";
-import Counter from "./Counter";
+import {useGetUserMe, useLogout} from "../../_server/queries";
+import Counter from "../Counter";
 import styled from "styled-components";
 
 const FlexContainer = styled(Container)`

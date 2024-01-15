@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {Button, CircularProgress, Typography, Avatar} from "@mui/material";
-import {useGetUserMe} from "../_server/queries";
-import LoginModal from "./LoginModal";
+import {useGetUserMe} from "../../_server/queries";
+import LoginModal from "../Modals/LoginModal";
 import Dashboard from "./Dashboard";
 import styled from "styled-components";
 

@@ -1,7 +1,7 @@
 import React from "react";
 import * as Yup from "yup";
-import {FormikForm, InputField} from "./Form/Form";
-import {useCheckUserExists, useSaveUser} from "../_server/queries";
+import {FormikForm, InputField} from "../Form/Form";
+import {useCheckUserExists, useSaveUser} from "../../_server/queries";
 import Button from "@mui/material/Button";
 import styled from "styled-components";
 import {Link} from "react-router-dom";

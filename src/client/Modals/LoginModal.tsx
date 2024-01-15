@@ -1,8 +1,8 @@
 import React, {useState} from "react";
 import * as Yup from "yup";
-import {InputField} from "./Form/Form";
+import {InputField} from "../Form/Form";
 import {Form, Formik} from "formik";
-import {useLogin} from "../_server/queries";
+import {useLogin} from "../../_server/queries";
 import {
   Button,
   Dialog,

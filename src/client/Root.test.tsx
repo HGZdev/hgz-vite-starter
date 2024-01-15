@@ -1,67 +1,76 @@
-import {render, screen, fireEvent} from "@testing-library/react";
-import {describe, it, expect} from "vitest";
-import {MockedProvider} from "@apollo/client/testing";
-import App from "./Root";
-import {getCounterGQL, incrementCounterGQL} from "../_server/queries";
+// Root.test.js
+import React from "react";
+import {render, screen} from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import {describe, expect} from "vitest";
+import {Root, LocationDisplay} from "./Root";
+import {BrowserRouter, MemoryRouter} from "react-router-dom";
 
-const mockedValue = 5;
+// Mock the Apollo Client queries/mutations
+const mocks = [];
 
-// Adjusting GraphQL mocks to include the `id` field and the value wrapped as `{ value: number }`
-const mocks = [
-  {
-    request: {
-      query: getCounterGQL,
-    },
-    result: {
-      data: {counter: {id: "1", value: mockedValue}},
-    },
-  },
-  {
-    request: {
-      query: incrementCounterGQL,
-    },
-    result: {
-      data: {incrementCounter: {id: "1", value: mockedValue + 1}}, // Incremented value is also wrapped in an object
-    },
-  },
-  {
-    request: {
-      query: getCounterGQL,
-    },
-    result: {
-      data: {counter: {id: "1", value: mockedValue + 1}}, // Next fetch also provides incremented value
-    },
-  },
-];
-
-describe("App Component", () => {
-  it("renders without crashing", async () => {
+// Test scenarios
+describe("Root Component Tests", (test) => {
+  test('renders landing page when path is "/"', () => {
     render(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <App />
-      </MockedProvider>
+      <BrowserRouter>
+        <Root />
+      </BrowserRouter>
     );
 
-    // screen.debug();
+    // Add assertions based on your application logic
+    expect(screen.getByText(/You are home/i)).toBeInTheDocument();
+  });
 
-    // Check if "Loading..." text appears first
-    const loadingText = screen.queryByText(/Loading.../i);
-    expect(loadingText).toBeTruthy();
-
-    // Wait for the counter to display
-    const counterDisplay = await screen.findByText(
-      new RegExp(`Counter: ${mockedValue}`)
+  test('renders registration page when navigating to "/registration"', () => {
+    render(
+      <MemoryRouter initialEntries={["/registration"]}>
+        <Root />
+      </MemoryRouter>
     );
-    expect(counterDisplay).toBeTruthy();
 
-    // Click the increment button
-    const incrementButton = screen.getByText(/Increment/i);
-    fireEvent.click(incrementButton);
+    // Add assertions based on your application logic
+    expect(screen.getByText(/Register Now/i)).toBeInTheDocument();
+  });
 
-    // Wait for the updated counter value to display
-    const updatedCounter = await screen.findByText(
-      new RegExp(`Counter: ${mockedValue + 1}`)
+  test("navigates to registration page when clicking sign up button", async () => {
+    render(
+      <BrowserRouter>
+        <Root />
+      </BrowserRouter>
     );
-    expect(updatedCounter).toBeTruthy();
+
+    // Add assertions based on your application logic
+    userEvent.click(screen.getByText(/Sign Up/i));
+
+    // Check if the URL has changed
+    expect(window.location.pathname).toBe("/registration");
+  });
+
+  // Add more test scenarios as needed
+});
+
+// Additional test scenarios for LocationDisplay component
+describe("LocationDisplay Component Tests", (test) => {
+  test("renders correct location when using BrowserRouter", () => {
+    render(
+      <BrowserRouter>
+        <LocationDisplay />
+      </BrowserRouter>
+    );
+
+    // Add assertions based on your application logic
+    expect(screen.getByTestId("location-display")).toHaveTextContent("/");
+  });
+
+  test("renders correct location when using MemoryRouter", () => {
+    render(
+      <MemoryRouter initialEntries={["/about"]}>
+        <LocationDisplay />
+      </MemoryRouter>
+    );
+
+    // Add assertions based on your application logic
+    expect(screen.getByTestId("location-display")).toHaveTextContent("/about");
   });
 });

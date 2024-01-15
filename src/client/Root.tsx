@@ -1,12 +1,11 @@
 import React from "react";
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
-import LandingPage from "./LandingPage";
+import LandingPage from "./Pages/LandingPage.tsx";
 import config from "../../config/config.ts";
-import Registration from "./Registration";
-import ErrorPage from "./ErrorPage";
+import Registration from "./Pages/Registration.tsx";
+import ErrorPage from "./Pages/ErrorPage.tsx";
 import {makeApolloProvider} from "../../lib/apollo/ApolloClient.tsx";
 import GlobalStyles from "./GlobalStyles.ts";
-// import GlobalStyles from "./globalStyles.ts";
 
 const ApolloProvider = makeApolloProvider(config);
 
