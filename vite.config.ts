@@ -12,7 +12,7 @@ export default defineConfig({
   },
   test: {
     environment: "jsdom", //
-    setupFiles: ["./src/_server/tests/mockServerSetup.ts"],
+    setupFiles: ["./src/_server/tests/vitestSetup.ts"],
     globals: true,
   },
 });

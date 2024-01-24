@@ -138,6 +138,7 @@ const Registration = () => {
           Back
         </Button>
       </Link>
+      <span>Registration</span>
       <RegistrationForm />
     </Container>
   );

@@ -7,9 +7,9 @@ import ErrorPage from "./Pages/ErrorPage.tsx";
 import {makeApolloProvider} from "../../lib/apollo/ApolloClient.tsx";
 import GlobalStyles from "./GlobalStyles.ts";
 
-const ApolloProvider = makeApolloProvider(config);
+export const ApolloProvider = makeApolloProvider(config);
 
-const router = createBrowserRouter([
+export const routesConfig = [
   {
     path: "/",
     element: <LandingPage />,
@@ -19,13 +19,15 @@ const router = createBrowserRouter([
     path: "/registration",
     element: <Registration />,
   },
-]);
+];
+
+const browserRouter = createBrowserRouter(routesConfig);
 
 const Root: React.FC = () => {
   return (
     <ApolloProvider>
       <GlobalStyles />
-      <RouterProvider router={router} />
+      <RouterProvider router={browserRouter} />
     </ApolloProvider>
   );
 };

@@ -28,10 +28,12 @@ const LandingPage: React.FC = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const {data, loading, error} = useGetUserMe();
 
-  if (!data && loading) return <CircularProgress aria-label="Loading" />;
+  if (!data && loading)
+    return <CircularProgress data-testid="loading" aria-label="loading" />;
   if (error) return <Typography>Error: {error.message}</Typography>;
 
   const getUserMe = data?.getUserMe;
+  console.log("getUserMe:", getUserMe);
 
   if (showLoginModal)
     return (
@@ -50,7 +52,7 @@ const LandingPage: React.FC = () => {
             src="/../assets/favicon.ico"
             sx={{width: 250, height: 250}}
           />
-
+          <div>Welcome!</div>
           <ButtonContainer>
             <SignupButton
               variant="contained"

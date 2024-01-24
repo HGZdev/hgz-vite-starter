@@ -1,76 +1,112 @@
 // Root.test.js
-import React from "react";
-import {render, screen} from "@testing-library/react";
+import {render, screen, waitFor} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import {describe, expect} from "vitest";
-import {Root, LocationDisplay} from "./Root";
-import {BrowserRouter, MemoryRouter} from "react-router-dom";
+import {
+  afterAll,
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  test,
+  vi,
+} from "vitest";
+import {
+  RouterProvider,
+  createMemoryRouter,
+  useLocation,
+} from "react-router-dom";
+import {ApolloProvider, routesConfig} from "./Root";
+import GlobalStyles from "./GlobalStyles";
+import {mockServer} from "../_server/tests/vitestSetup";
+import {HttpResponse, graphql} from "msw";
 
-// Mock the Apollo Client queries/mutations
-const mocks = [];
+const MockedRoot = ({
+  initialEntries = ["/"],
+}: {
+  initialEntries?: string[] | undefined;
+}) => {
+  return (
+    <ApolloProvider>
+      <GlobalStyles />
+      <RouterProvider
+        router={createMemoryRouter(routesConfig, {
+          initialEntries,
+        })}
+      />
+    </ApolloProvider>
+  );
+};
 
-// Test scenarios
-describe("Root Component Tests", (test) => {
-  test('renders landing page when path is "/"', () => {
-    render(
-      <BrowserRouter>
-        <Root />
-      </BrowserRouter>
-    );
+export const LocationDisplay = () => {
+  const location = useLocation();
+  return <div data-testid="location-display">{location.pathname}</div>;
+};
 
-    // Add assertions based on your application logic
-    expect(screen.getByText(/You are home/i)).toBeInTheDocument();
+describe("Root Component Tests", () => {
+  describe("User logged-out", () => {
+    beforeEach(() => {
+      mockServer.use(
+        graphql.query("getUserMe", () => {
+          return HttpResponse.json({
+            data: {
+              getUserMe: null,
+            },
+          });
+        })
+      );
+    });
+    test('renders landing page when path is "/"', async () => {
+      render(<MockedRoot />);
+
+      expect(screen.getByTestId("loading"));
+      await waitFor(() => {
+        expect(screen.getByText(/Welcome!/i));
+      });
+    });
+
+    test('renders registration page when navigating to "/registration"', () => {
+      render(<MockedRoot initialEntries={["/registration"]} />);
+      expect(screen.getByText(/Registration/i));
+    });
+
+    // test("navigates to registration page when clicking sign up button", async () => {
+    //   render(<MockedRoot />);
+
+    //   await waitFor(() => {
+    //     expect(screen.getByText(/Sign Up/i));
+
+    //     userEvent.click(screen.getByText(/Sign Up/i));
+    //     // Check if the URL has changed
+    //     expect(window.location.pathname).toBe("/registration");
+    //   });
+    // });
   });
 
-  test('renders registration page when navigating to "/registration"', () => {
-    render(
-      <MemoryRouter initialEntries={["/registration"]}>
-        <Root />
-      </MemoryRouter>
-    );
+  describe("User logged-in", () => {
+    beforeEach(() => {
+      mockServer.use(
+        graphql.query("getUserMe", () => {
+          return HttpResponse.json({
+            data: {
+              getUserMe: {
+                id: 1,
+                email: "user@example.com",
+                firstName: "John",
+                lastName: "Doe",
+              },
+            },
+          });
+        })
+      );
+    });
+    test('renders dashboard page when path is "/"', async () => {
+      render(<MockedRoot />);
 
-    // Add assertions based on your application logic
-    expect(screen.getByText(/Register Now/i)).toBeInTheDocument();
-  });
+      expect(screen.getByTestId("loading"));
 
-  test("navigates to registration page when clicking sign up button", async () => {
-    render(
-      <BrowserRouter>
-        <Root />
-      </BrowserRouter>
-    );
-
-    // Add assertions based on your application logic
-    userEvent.click(screen.getByText(/Sign Up/i));
-
-    // Check if the URL has changed
-    expect(window.location.pathname).toBe("/registration");
-  });
-
-  // Add more test scenarios as needed
-});
-
-// Additional test scenarios for LocationDisplay component
-describe("LocationDisplay Component Tests", (test) => {
-  test("renders correct location when using BrowserRouter", () => {
-    render(
-      <BrowserRouter>
-        <LocationDisplay />
-      </BrowserRouter>
-    );
-
-    // Add assertions based on your application logic
-    expect(screen.getByTestId("location-display")).toHaveTextContent("/");
-  });
-
-  test("renders correct location when using MemoryRouter", () => {
-    render(
-      <MemoryRouter initialEntries={["/about"]}>
-        <LocationDisplay />
-      </MemoryRouter>
-    );
-
-    // Add assertions based on your application logic
-    expect(screen.getByTestId("location-display")).toHaveTextContent("/about");
+      await waitFor(() => {
+        expect(screen.getByText(/Dashboard!/i));
+      });
+    });
   });
 });

@@ -1,8 +1,8 @@
 import {render, screen, fireEvent} from "@testing-library/react";
 import {describe, it, expect} from "vitest";
 import {MockedProvider} from "@apollo/client/testing";
-import App from "../Root";
-import {getCounterGQL, incrementCounterGQL} from "../../_server/queries";
+import App from "./Root";
+import {getCounterGQL, incrementCounterGQL} from "../_server/queries";
 
 const mockedValue = 5;
 
