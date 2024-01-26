@@ -4,6 +4,7 @@ import {useGetUserMe} from "../../_server/queries";
 import LoginModal from "../Modals/LoginModal";
 import Dashboard from "./Dashboard";
 import styled from "styled-components";
+import {useNavigate} from "react-router-dom";
 
 const LandingPageContainer = styled("div")`
   display: flex;
@@ -27,24 +28,23 @@ const LoginButton = styled(Button)``;
 const LandingPage: React.FC = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const {data, loading, error} = useGetUserMe();
+  const navigate = useNavigate();
 
   if (!data && loading)
     return <CircularProgress data-testid="loading" aria-label="loading" />;
   if (error) return <Typography>Error: {error.message}</Typography>;
 
   const getUserMe = data?.getUserMe;
-  console.log("getUserMe:", getUserMe);
-
-  if (showLoginModal)
+  if (showLoginModal) {
     return (
       <LoginModal
         open={showLoginModal}
         onClose={() => setShowLoginModal(false)}
       />
     );
-
+  }
   return (
-    <LandingPageContainer>
+    <LandingPageContainer data-testid="LandingPage">
       {!getUserMe ? (
         <>
           <Avatar
@@ -57,18 +57,18 @@ const LandingPage: React.FC = () => {
             <SignupButton
               variant="contained"
               color="primary"
-              onClick={() => (window.location.href = "/registration")}
-              aria-label="Sign up"
+              onClick={() => navigate("/registration")}
+              aria-label="Register"
             >
-              Sign up
+              Register
             </SignupButton>
             <LoginButton
               variant="contained"
               color="secondary"
               onClick={() => setShowLoginModal(true)}
-              aria-label="Log in"
+              aria-label="Login"
             >
-              Log in
+              Login
             </LoginButton>
           </ButtonContainer>
         </>

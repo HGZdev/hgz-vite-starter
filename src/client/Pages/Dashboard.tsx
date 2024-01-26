@@ -41,7 +41,7 @@ const Dashboard = () => {
     );
 
   return (
-    <FlexContainer>
+    <FlexContainer data-testid="Dashboard">
       <LogoutButton
         variant="contained"
         color="primary"

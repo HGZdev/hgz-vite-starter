@@ -132,7 +132,7 @@ const RegistrationForm: React.FC = () => {
 
 const Registration = () => {
   return (
-    <Container>
+    <Container data-testid="Registration">
       <Link to="/">
         <Button color="primary" startIcon={"<"} aria-label="Back Button">
           Back

@@ -1,4 +1,3 @@
-// server/mockGraphQLHandlers.ts
 import {graphql, HttpResponse} from "msw";
 
 export const getUserMeNotLoggedInRes = [
@@ -30,60 +29,24 @@ export const getUserMeLoggedInRes = [
 const mockCounterValue = 5;
 
 export const counterIncrementingRes = [
-  graphql.query("counter", () => {
+  graphql.query("getCounter", () => {
     return HttpResponse.json({
       data: {
-        counter: mockCounterValue,
+        getCounter: {id: 1, value: mockCounterValue},
       },
     });
   }),
   graphql.mutation("incrementCounter", () => {
     return HttpResponse.json({
       data: {
-        incrementCounter: true,
+        incrementCounter: {id: 1, value: mockCounterValue + 1},
       },
     });
   }),
-  graphql.query("counter", () => {
+  graphql.query("getCounter", () => {
     return HttpResponse.json({
       data: {
-        counter: mockCounterValue + 1,
-      },
-    });
-  }),
-];
-
-export const graphqlHandlers = [
-  graphql.query("getUserMe", () => {
-    return HttpResponse.json({
-      data: {
-        getUserMe: {
-          id: 1,
-          email: "user@example.com",
-          firstName: "John",
-          lastName: "Doe",
-        },
-      },
-    });
-  }),
-  graphql.query("counter", () => {
-    return HttpResponse.json({
-      data: {
-        counter: mockCounterValue,
-      },
-    });
-  }),
-  graphql.mutation("incrementCounter", () => {
-    return HttpResponse.json({
-      data: {
-        incrementCounter: true,
-      },
-    });
-  }),
-  graphql.query("counter", () => {
-    return HttpResponse.json({
-      data: {
-        counter: mockCounterValue + 1,
+        getCounter: {id: 1, value: mockCounterValue + 1},
       },
     });
   }),

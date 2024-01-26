@@ -1,6 +1,8 @@
+// LoginModal.tsx
 import React, {useState} from "react";
 import * as Yup from "yup";
 import {InputField} from "../Form/Form";
+import {Link} from "react-router-dom";
 import {Form, Formik} from "formik";
 import {useLogin} from "../../_server/queries";
 import {
@@ -12,7 +14,6 @@ import {
   Typography,
   Box, // Import Box from @mui/material to use flexbox
 } from "@mui/material";
-import {Link} from "react-router-dom";
 
 // Define validation schema
 const validationSchema = Yup.object().shape({
@@ -77,7 +78,7 @@ const LoginForm: React.FC<LoginFormProps> = ({onClose}) => {
         <DialogActions>
           <Box flexGrow={1}>
             <Link to="/registration">
-              <Button color="primary">Sign up</Button>
+              <Button color="primary">Register</Button>
             </Link>
           </Box>
           <Button onClick={onClose} color="secondary">
@@ -92,14 +93,20 @@ const LoginForm: React.FC<LoginFormProps> = ({onClose}) => {
   );
 };
 
-interface LoginModalProps {
+export interface LoginModalProps {
   onClose: () => void;
   open: boolean;
 }
 
 const LoginModal: React.FC<LoginModalProps> = ({onClose, open}) => {
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+    <Dialog
+      data-testid="LoginModal"
+      open={open}
+      onClose={onClose}
+      maxWidth="sm"
+      fullWidth
+    >
       <DialogTitle>Login</DialogTitle>
       <DialogContent>
         <LoginForm onClose={onClose} />
