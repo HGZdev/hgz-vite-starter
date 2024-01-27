@@ -12,7 +12,7 @@ export default defineConfig({
   },
   test: {
     environment: "jsdom", //
-    setupFiles: ["./src/_server/tests/vitestSetup.ts"],
+    setupFiles: ["./src/tests/vitestSetup.ts"],
     globals: true,
   },
 });

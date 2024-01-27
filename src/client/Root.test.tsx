@@ -9,14 +9,14 @@ import {
 } from "react-router-dom";
 import {routesConfig} from "./Root";
 import GlobalStyles from "./GlobalStyles";
-import {mockServer} from "../_server/tests/vitestSetup";
+import {mockServer} from "../tests/vitestSetup";
 import config from "../../config/config";
 import {makeApolloProvider} from "../../lib/apollo/ApolloClient";
 import {
   counterIncrementingRes,
   getUserMeLoggedInRes,
   getUserMeNotLoggedInRes,
-} from "../_server/tests/graphqlHandlers";
+} from "../tests/graphqlHandlers";
 
 const MockedRoot = ({
   initialEntries = ["/"],

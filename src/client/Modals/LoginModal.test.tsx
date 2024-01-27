@@ -2,11 +2,11 @@
 import {render, screen, waitFor} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {describe, test, beforeEach, expect, vi} from "vitest";
-import {mockServer} from "../../_server/tests/vitestSetup";
+import {mockServer} from "../../tests/vitestSetup";
 import {
   counterIncrementingRes,
   getUserMeNotLoggedInRes,
-} from "../../_server/tests/graphqlHandlers";
+} from "../../tests/graphqlHandlers";
 import {makeApolloProvider} from "../../../lib/apollo/ApolloClient";
 import config from "../../../config/config";
 import {routesConfig} from "../Root";
