@@ -2,45 +2,14 @@
 import {render, screen} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {beforeEach, describe, expect, test} from "vitest";
-import {
-  RouterProvider,
-  createMemoryRouter,
-  createRoutesFromElements,
-} from "react-router-dom";
-import {routesConfig} from "./Root";
-import GlobalStyles from "./GlobalStyles";
 import {mockServer} from "../tests/vitestSetup";
-import config from "../../config/config";
-import {makeApolloProvider} from "../../lib/apollo/ApolloClient";
 import {
   counterIncrementingRes,
   getUserMeLoggedInRes,
   getUserMeNotLoggedInRes,
 } from "../tests/graphqlHandlers";
-
-const MockedRoot = ({
-  initialEntries = ["/"],
-}: {
-  initialEntries?: string[] | undefined;
-}) => {
-  // create ApolloProvider here for mock server queries isolation
-  const ApolloProvider = makeApolloProvider(config);
-  return (
-    <ApolloProvider>
-      <GlobalStyles />
-      <RouterProvider
-        router={createMemoryRouter(createRoutesFromElements(routesConfig), {
-          initialEntries,
-        })}
-      />
-    </ApolloProvider>
-  );
-};
-
-// findBy*. is the async version of getBy
-const findBtn = async (buttonName: string | RegExp) =>
-  await screen.findByRole("button", {name: buttonName});
-const findId = async (id: string | RegExp) => await screen.findByTestId(id);
+import {MockedRoot} from "../tests/testing-library/Components";
+import {findBtn, findId} from "../tests/testing-library/helpers";
 
 describe("Root Component Tests", () => {
   describe("User is logged-out", () => {

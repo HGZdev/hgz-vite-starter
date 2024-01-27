@@ -9,7 +9,7 @@ import GlobalStyles from "./GlobalStyles.ts";
 
 export const ApolloProvider = makeApolloProvider(config);
 
-export const routesConfig = (
+export const RoutesConfig = (
   <>
     <Route path="/" element={<LandingPage />} errorElement={<ErrorPage />} />
     <Route path="/registration" element={<Registration />} />
@@ -21,7 +21,7 @@ const Root: React.FC = () => {
     <ApolloProvider>
       <GlobalStyles />
       <BrowserRouter future={{v7_startTransition: true}}>
-        <Routes>{routesConfig}</Routes>
+        <Routes>{RoutesConfig}</Routes>
       </BrowserRouter>
     </ApolloProvider>
   );
