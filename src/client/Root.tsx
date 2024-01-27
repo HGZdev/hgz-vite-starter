@@ -1,5 +1,12 @@
+// Root.tsx
+
 import React from "react";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {
+  Route,
+  RouterProvider,
+  createBrowserRouter,
+  createRoutesFromElements,
+} from "react-router-dom";
 import LandingPage from "./Pages/LandingPage.tsx";
 import config from "../../config/config.ts";
 import Registration from "./Pages/Registration.tsx";
@@ -13,16 +20,17 @@ export const RoutesConfig = (
   <>
     <Route path="/" element={<LandingPage />} errorElement={<ErrorPage />} />
     <Route path="/registration" element={<Registration />} />
+    <Route path="*" element={<ErrorPage />} />
   </>
 );
+
+const router = createBrowserRouter(createRoutesFromElements(RoutesConfig));
 
 const Root: React.FC = () => {
   return (
     <ApolloProvider>
       <GlobalStyles />
-      <BrowserRouter future={{v7_startTransition: true}}>
-        <Routes>{RoutesConfig}</Routes>
-      </BrowserRouter>
+      <RouterProvider router={router} future={{v7_startTransition: true}} />
     </ApolloProvider>
   );
 };

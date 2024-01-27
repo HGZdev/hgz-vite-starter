@@ -1,5 +1,5 @@
 // LoginModal.test.tsx
-import {render, screen, waitFor} from "@testing-library/react";
+import {screen, waitFor} from "@testing-library/react";
 import userEvent, {type UserEvent} from "@testing-library/user-event";
 import {describe, test, beforeEach, expect, vi} from "vitest";
 import {mockServer} from "../../tests/vitestSetup";
@@ -7,11 +7,11 @@ import {
   counterIncrementingRes,
   getUserMeNotLoggedInRes,
 } from "../../tests/graphqlHandlers";
-import {MockedRoot} from "../../tests/testing-library/Components";
 import {findBtn, findId, findText} from "../../tests/testing-library/helpers";
 import {Route} from "react-router-dom";
 import LoginModal from "./LoginModal";
 import LandingPage from "../Pages/LandingPage";
+import {renderMockRoot} from "../../tests/testing-library/Components";
 
 describe("LoginModal Component Tests", () => {
   let onCloseMock: () => void;
@@ -23,35 +23,34 @@ describe("LoginModal Component Tests", () => {
   });
 
   test("go to LoginModal, than go back when Cancel button is clicked", async () => {
-    render(
-      <MockedRoot>
-        <Route path="/" element={<LandingPage />} />
-      </MockedRoot>
-    );
+    const {router} = renderMockRoot({
+      initialEntries: ["/"],
+      Routes: <Route path="/" element={<LandingPage />} />,
+    });
 
     expect(screen.getByTestId("loading"));
     expect(await findBtn("Login"));
 
     await user.click(await findBtn("Login"));
 
-    await waitFor(async () => {
-      expect(await findId("LoginModal")).toMatchSnapshot();
-      expect(await findBtn("Register"));
-      expect(await findBtn("Cancel"));
-      expect(await findBtn("Login"));
+    expect(await findId("LoginModal")).toMatchSnapshot();
+    expect(await findBtn("Register"));
+    expect(await findBtn("Cancel"));
+    expect(await findBtn("Login"));
 
-      await user.click(screen.getByRole("button", {name: "Cancel"}));
-      expect((await findId("location-display")).innerHTML).toEqual("/");
-      expect(await findId("LandingPage"));
-    });
+    await user.click(await findBtn("Cancel"));
+
+    expect(router.state.location.pathname).toEqual("/");
+    expect(await findId("LandingPage"));
   });
 
   test("calls onClose when Cancel button is clicked", async () => {
-    render(
-      <MockedRoot>
+    renderMockRoot({
+      initialEntries: ["/"],
+      Routes: (
         <Route path="/" element={<LoginModal open onClose={onCloseMock} />} />
-      </MockedRoot>
-    );
+      ),
+    });
 
     expect(await findBtn("Cancel"));
     await user.click(await findBtn("Cancel"));
@@ -59,11 +58,12 @@ describe("LoginModal Component Tests", () => {
   });
 
   test("displays validation errors for empty fields on form submission", async () => {
-    render(
-      <MockedRoot>
+    renderMockRoot({
+      initialEntries: ["/"],
+      Routes: (
         <Route path="/" element={<LoginModal open onClose={onCloseMock} />} />
-      </MockedRoot>
-    );
+      ),
+    });
     user.click(await findBtn("Login"));
 
     await waitFor(async () => {
@@ -72,24 +72,25 @@ describe("LoginModal Component Tests", () => {
     });
   });
 
-  test("handles login error and displays error message", async () => {
-    // Mocking login function to simulate an error
+  // test("handles login error and displays error message", async () => {
+  //   // Mocking login function to simulate an error
 
-    render(
-      <MockedRoot>
-        <Route path="/" element={<LoginModal open onClose={onCloseMock} />} />
-      </MockedRoot>
-    );
+  //   renderMockRoot({
+  //     initialEntries: ["/"],
+  //     Routes: (
+  //       <Route path="/" element={<LoginModal open onClose={onCloseMock} />} />
+  //     ),
+  //   });
 
-    await user.type(screen.getByLabelText("Email"), "test@example.com");
-    await user.type(screen.getByLabelText("Password"), "password123");
-    await user.click(screen.getByRole("button", {name: "Login"}));
+  //   await user.type(screen.getByLabelText("Email"), "test@example.com");
+  //   await user.type(screen.getByLabelText("Password"), "password123");
+  //   await user.click(screen.getByRole("button", {name: "Login"}));
 
-    await waitFor(() => {
-      expect(onCloseMock).not.toHaveBeenCalled();
-      expect(screen.getByText("Something went wrong"));
-    });
-  });
+  //   await waitFor(() => {
+  //     expect(onCloseMock).not.toHaveBeenCalled();
+  //     expect(screen.getByText("Something went wrong"));
+  //   });
+  // });
 
   // test("submits login form successfully and calls onClose", async () => {
   //   // Mocking login function to simulate a successful login

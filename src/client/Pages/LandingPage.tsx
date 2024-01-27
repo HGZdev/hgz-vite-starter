@@ -52,7 +52,7 @@ const LandingPage: React.FC = () => {
             src="/../assets/favicon.ico"
             sx={{width: 250, height: 250}}
           />
-          <div>Welcome!</div>
+          <Typography>Welcome!</Typography>
           <ButtonContainer>
             <SignupButton
               variant="contained"

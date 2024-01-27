@@ -30,7 +30,7 @@ const Dashboard = () => {
   if (!data && loading)
     return (
       <FlexContainer aria-busy="true" aria-live="polite">
-        Loading...
+        <Typography>Loading...</Typography>
       </FlexContainer>
     );
   if (error)
@@ -51,7 +51,7 @@ const Dashboard = () => {
         Logout
       </LogoutButton>
       <div>
-        <Title variant="h4">Welcome to the Dashboard!</Title>
+        <Title variant="h4">Welcome {data?.getUserMe.email}!</Title>
         <Counter />
       </div>
     </FlexContainer>

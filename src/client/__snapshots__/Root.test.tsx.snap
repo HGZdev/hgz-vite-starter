@@ -15,9 +15,11 @@ exports[`Root Component Tests > User is logged-out > renders landing page when p
         src="/../assets/favicon.ico"
       />
     </div>
-    <div>
+    <p
+      class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+    >
       Welcome!
-    </div>
+    </p>
     <div
       class="sc-eCstZk hQghqi"
     >
@@ -44,11 +46,6 @@ exports[`Root Component Tests > User is logged-out > renders landing page when p
         />
       </button>
     </div>
-  </div>
-  <div
-    data-testid="location-display"
-  >
-    /
   </div>
 </div>
 `;

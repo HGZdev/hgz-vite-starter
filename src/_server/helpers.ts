@@ -1,23 +1,22 @@
 import jwt from "jsonwebtoken";
+import {UserRow} from "./graphql/users";
 
 const JWT_SECRET = process.env.JWT_SECRET || "secret";
 console.log("JWT_SECRET:", JWT_SECRET);
 
 export const getUserFromToken = (token: string) => {
-  let user;
-  if (token) {
-    try {
-      user = jwt.verify(token, JWT_SECRET);
-      return user;
-    } catch (err) {
-      console.log(err);
-    }
+  if (!token) return;
+
+  try {
+    const user = jwt.verify(token, JWT_SECRET);
+    return user;
+  } catch (err) {
+    console.log(err);
   }
-  return user;
 };
 
-export const makeTokenFromUser = (user: unknown, expiresIn: string = "1hr") => {
-  const token = jwt.sign({user}, JWT_SECRET, {
+export const makeTokenFromUser = (user: UserRow, expiresIn: string = "1hr") => {
+  const token = jwt.sign(user, JWT_SECRET, {
     expiresIn,
   });
 

@@ -5,6 +5,7 @@ import {useCheckUserExists, useSaveUser} from "../../_server/queries";
 import Button from "@mui/material/Button";
 import styled from "styled-components";
 import {Link} from "react-router-dom";
+import {Typography} from "@mui/material";
 
 const Container = styled.div`
   padding: 1rem; /* Default padding for mobile devices */
@@ -138,7 +139,7 @@ const Registration = () => {
           Back
         </Button>
       </Link>
-      <span>Registration</span>
+      <Typography>Registration</Typography>
       <RegistrationForm />
     </Container>
   );
