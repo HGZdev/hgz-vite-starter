@@ -1,5 +1,5 @@
 import React from "react";
-import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 import LandingPage from "./Pages/LandingPage.tsx";
 import config from "../../config/config.ts";
 import Registration from "./Pages/Registration.tsx";
@@ -9,25 +9,20 @@ import GlobalStyles from "./GlobalStyles.ts";
 
 export const ApolloProvider = makeApolloProvider(config);
 
-export const routesConfig = [
-  {
-    path: "/",
-    element: <LandingPage />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/registration",
-    element: <Registration />,
-  },
-];
-
-const browserRouter = createBrowserRouter(routesConfig);
+export const routesConfig = (
+  <>
+    <Route path="/" element={<LandingPage />} errorElement={<ErrorPage />} />
+    <Route path="/registration" element={<Registration />} />
+  </>
+);
 
 const Root: React.FC = () => {
   return (
     <ApolloProvider>
       <GlobalStyles />
-      <RouterProvider router={browserRouter} />
+      <BrowserRouter future={{v7_startTransition: true}}>
+        <Routes>{routesConfig}</Routes>
+      </BrowserRouter>
     </ApolloProvider>
   );
 };

@@ -2,7 +2,11 @@
 import {render, screen} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {beforeEach, describe, expect, test} from "vitest";
-import {RouterProvider, createMemoryRouter} from "react-router-dom";
+import {
+  RouterProvider,
+  createMemoryRouter,
+  createRoutesFromElements,
+} from "react-router-dom";
 import {routesConfig} from "./Root";
 import GlobalStyles from "./GlobalStyles";
 import {mockServer} from "../_server/tests/vitestSetup";
@@ -25,7 +29,7 @@ const MockedRoot = ({
     <ApolloProvider>
       <GlobalStyles />
       <RouterProvider
-        router={createMemoryRouter(routesConfig, {
+        router={createMemoryRouter(createRoutesFromElements(routesConfig), {
           initialEntries,
         })}
       />
