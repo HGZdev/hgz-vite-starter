@@ -41,6 +41,7 @@ describe("LoginModal Component Tests", () => {
       expect(await findBtn("Login"));
 
       await user.click(screen.getByRole("button", {name: "Cancel"}));
+      expect((await findId("location-display")).innerHTML).toEqual("/");
       expect(await findId("LandingPage"));
     });
   });
@@ -71,30 +72,24 @@ describe("LoginModal Component Tests", () => {
     });
   });
 
-  // test("handles login error and displays error message", async () => {
-  //   // Mocking login function to simulate an error
-  //   vi.mock("../../_server/queries", () => ({
-  //     ...vi.requireActual("../../_server/queries"),
-  //     useLogin: () => [
-  //       async () => {
-  //         throw new Error("Mock login error");
-  //       },
-  //     ],
-  //   }));
+  test("handles login error and displays error message", async () => {
+    // Mocking login function to simulate an error
 
-  //   render(<LoginModal open onClose={onCloseMock} />);
+    render(
+      <MockedRoot>
+        <Route path="/" element={<LoginModal open onClose={onCloseMock} />} />
+      </MockedRoot>
+    );
 
-  //   await act(async () => {
-  //     userEvent.type(screen.getByLabelText("Email"), "test@example.com");
-  //     userEvent.type(screen.getByLabelText("Password"), "password123");
-  //     userEvent.click(screen.getByRole("button", {name: "Login"}));
-  //   });
+    await user.type(screen.getByLabelText("Email"), "test@example.com");
+    await user.type(screen.getByLabelText("Password"), "password123");
+    await user.click(screen.getByRole("button", {name: "Login"}));
 
-  //   await waitFor(() => {
-  //     expect(onCloseMock).not.toHaveBeenCalled();
-  //     expect(screen.getByText("Something went wrong"));
-  //   });
-  // });
+    await waitFor(() => {
+      expect(onCloseMock).not.toHaveBeenCalled();
+      expect(screen.getByText("Something went wrong"));
+    });
+  });
 
   // test("submits login form successfully and calls onClose", async () => {
   //   // Mocking login function to simulate a successful login

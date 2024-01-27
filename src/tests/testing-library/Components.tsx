@@ -1,8 +1,14 @@
-import {MemoryRouter, Routes} from "react-router-dom";
+import {MemoryRouter, Routes, useLocation} from "react-router-dom";
 import config from "../../../config/config";
 import {makeApolloProvider} from "../../../lib/apollo/ApolloClient";
 import GlobalStyles from "../../client/GlobalStyles";
 import {RoutesConfig} from "../../client/Root";
+
+export const LocationDisplay = () => {
+  const location = useLocation();
+
+  return <div data-testid="location-display">{location.pathname}</div>;
+};
 
 export const MockedRoot = ({
   children = RoutesConfig,
@@ -21,6 +27,7 @@ export const MockedRoot = ({
         initialEntries={initialEntries}
       >
         <Routes>{children}</Routes>
+        <LocationDisplay />
       </MemoryRouter>
     </ApolloProvider>
   );

@@ -45,5 +45,10 @@ exports[`Root Component Tests > User is logged-out > renders landing page when p
       </button>
     </div>
   </div>
+  <div
+    data-testid="location-display"
+  >
+    /
+  </div>
 </div>
 `;

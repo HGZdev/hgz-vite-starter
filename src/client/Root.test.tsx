@@ -1,7 +1,7 @@
 // Root.test.tsx
-import {render, screen} from "@testing-library/react";
+import {render, screen, waitFor} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import {beforeEach, describe, expect, test} from "vitest";
+import {beforeEach, describe, expect, test, vi} from "vitest";
 import {mockServer} from "../tests/vitestSetup";
 import {
   counterIncrementingRes,
@@ -9,7 +9,7 @@ import {
   getUserMeNotLoggedInRes,
 } from "../tests/graphqlHandlers";
 import {MockedRoot} from "../tests/testing-library/Components";
-import {findBtn, findId} from "../tests/testing-library/helpers";
+import {findBtn, findId, findText} from "../tests/testing-library/helpers";
 
 describe("Root Component Tests", () => {
   describe("User is logged-out", () => {
@@ -43,24 +43,25 @@ describe("Root Component Tests", () => {
       expect(await findId("Registration"));
       expect(await findBtn(/Register/i));
 
-      // await waitFor(async () => {
-      //   // Check if the URL has changed
-      //   expect(window.location.pathname).toEqual("/registration");
-      // });
+      await waitFor(async () => {
+        expect((await findId("location-display")).innerHTML).toEqual(
+          "/registration"
+        );
+      });
     });
 
-    // test("renders error page for 404 not found", async () => {
-    //   // Render the component with a non-existent route
-    //   render(<MockedRoot initialEntries={["/nonexistent"]} />);
+    test("renders error page for 404 not found", async () => {
+      // Render the component with a non-existent route
+      render(<MockedRoot initialEntries={["/nonexistent"]} />);
 
-    //   // Ensure that the error page is rendered
-    //   const errorPage = await screen.findByTestId(/error-page/i);
-    //   expect(errorPage);
+      // Ensure that the error page is rendered
+      const errorPage = await findId(/error-page/i);
+      expect(errorPage);
 
-    //   // Check if the error message contains 404
-    //   const errorMessage = await screen.findByText(/404/i);
-    //   expect(errorMessage);
-    // });
+      // Check if the error message contains 404
+      const errorMessage = await findText(/404/i);
+      expect(errorMessage);
+    });
   });
 
   describe("User is logged-in", () => {
