@@ -5,7 +5,11 @@ import {describe, test, beforeEach, expect, vi} from "vitest";
 import {mockServer} from "../../tests/vitestSetup";
 import {
   counterIncrementingRes,
+  getUserLoggedInRes,
+  getUserMeLoggedInRes,
   getUserMeNotLoggedInRes,
+  makeInvalidCredsLogin,
+  makeSuccessfulLogin,
 } from "../../tests/graphqlHandlers";
 import {findBtn, findId, findText} from "../../tests/testing-library/helpers";
 import {Route} from "react-router-dom";
@@ -72,43 +76,51 @@ describe("LoginModal Component Tests", () => {
     });
   });
 
-  // test("handles login error and displays error message", async () => {
-  //   // Mocking login function to simulate an error
+  test("handles login error and displays error message", async () => {
+    mockServer.use(...makeInvalidCredsLogin, ...getUserMeNotLoggedInRes);
 
-  //   renderMockRoot({
-  //     initialEntries: ["/"],
-  //     Routes: (
-  //       <Route path="/" element={<LoginModal open onClose={onCloseMock} />} />
-  //     ),
-  //   });
+    const {
+      render: {findByLabelText},
+    } = renderMockRoot({
+      initialEntries: ["/"],
+      Routes: (
+        <Route path="/" element={<LoginModal open onClose={onCloseMock} />} />
+      ),
+    });
 
-  //   await user.type(screen.getByLabelText("Email"), "test@example.com");
-  //   await user.type(screen.getByLabelText("Password"), "password123");
-  //   await user.click(screen.getByRole("button", {name: "Login"}));
+    // Trigger a login attempt
+    await user.type(await findByLabelText("Email"), "test@example.com");
+    await user.type(await findByLabelText("Password"), "incorrectPassword");
+    await user.click(await findBtn("Login"));
 
-  //   await waitFor(() => {
-  //     expect(onCloseMock).not.toHaveBeenCalled();
-  //     expect(screen.getByText("Something went wrong"));
-  //   });
-  // });
+    await user.click(await findBtn("Login"));
 
-  // test("submits login form successfully and calls onClose", async () => {
-  //   // Mocking login function to simulate a successful login
-  //   vi.mock("../../_server/queries", () => ({
-  //     ...vi.requireActual("../../_server/queries"),
-  //     useLogin: () => [async () => ({data: {login: {token: "mockToken"}}})],
-  //   }));
+    // Wait for the error message to appear
+    expect((await findId("error-banner")).innerHTML).toContain(
+      "Something went wrong"
+    );
+  });
+  test("handles successful login", async () => {
+    mockServer.use(
+      ...makeSuccessfulLogin,
+      ...getUserMeLoggedInRes,
+      ...getUserLoggedInRes
+    );
 
-  //   render(<LoginModal open onClose={onCloseMock} />);
+    const {
+      render: {findByLabelText},
+    } = renderMockRoot({
+      initialEntries: ["/"],
+      Routes: (
+        <Route path="/" element={<LoginModal open onClose={onCloseMock} />} />
+      ),
+    });
 
-  //   await act(async () => {
-  //     userEvent.type(screen.getByLabelText("Email"), "test@example.com");
-  //     userEvent.type(screen.getByLabelText("Password"), "password123");
-  //     userEvent.click(screen.getByRole("button", {name: "Login"}));
-  //   });
+    await user.type(await findByLabelText("Email"), "user@example.com");
+    await user.type(await findByLabelText("Password"), "correctPassword");
+    await user.click(await findBtn("Login"));
 
-  //   await waitFor(() => {
-  //     expect(onCloseMock).toHaveBeenCalled();
-  //   });
-  // });
+    expect(findId("LoginModal"));
+    expect(onCloseMock).toHaveBeenCalledTimes(1);
+  });
 });

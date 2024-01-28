@@ -52,8 +52,7 @@ const LoginForm: React.FC<LoginFormProps> = ({onClose}) => {
             onClose();
           }
         } catch (error) {
-          setLoginError("Something went wrong");
-          console.error("Error during login:", error);
+          setLoginError("Login: Something went wrong");
         }
       }}
     >
@@ -71,9 +70,11 @@ const LoginForm: React.FC<LoginFormProps> = ({onClose}) => {
           autoComplete="current-password"
         />
         {loginError && (
-          <Typography variant="caption" color="error">
-            {loginError}
-          </Typography>
+          <span data-testid="error-banner">
+            <Typography variant="caption" color="error">
+              {loginError}
+            </Typography>
+          </span>
         )}
         <DialogActions>
           <Box flexGrow={1}>
