@@ -23,7 +23,7 @@ describe("LoginModal Component Tests", () => {
   beforeEach(() => {
     onCloseMock = vi.fn();
     user = userEvent.setup();
-    mockServer.use(...getUserMeNotLoggedInRes, ...counterIncrementingRes);
+    mockServer.use(getUserMeNotLoggedInRes, ...counterIncrementingRes);
   });
 
   test("go to LoginModal, than go back when Cancel button is clicked", async () => {
@@ -77,7 +77,7 @@ describe("LoginModal Component Tests", () => {
   });
 
   test("handles login error and displays error message", async () => {
-    mockServer.use(...makeInvalidCredsLogin, ...getUserMeNotLoggedInRes);
+    mockServer.use(makeInvalidCredsLogin, getUserMeNotLoggedInRes);
 
     const {
       render: {findByLabelText},
@@ -102,9 +102,9 @@ describe("LoginModal Component Tests", () => {
   });
   test("handles successful login", async () => {
     mockServer.use(
-      ...makeSuccessfulLogin,
-      ...getUserMeLoggedInRes,
-      ...getUserLoggedInRes
+      makeSuccessfulLogin,
+      getUserMeLoggedInRes,
+      getUserLoggedInRes
     );
 
     const {

@@ -16,7 +16,7 @@ describe("Root Component Tests", () => {
     let user: UserEvent;
     beforeEach(() => {
       user = userEvent.setup();
-      mockServer.use(...getUserMeNotLoggedInRes, ...counterIncrementingRes);
+      mockServer.use(getUserMeNotLoggedInRes, ...counterIncrementingRes);
     });
     test('renders landing page when path is "/"', async () => {
       const {
@@ -61,7 +61,7 @@ describe("Root Component Tests", () => {
 
   describe("User is logged-in", () => {
     beforeEach(() => {
-      mockServer.use(...getUserMeLoggedInRes, ...counterIncrementingRes);
+      mockServer.use(getUserMeLoggedInRes, ...counterIncrementingRes);
     });
     test('renders dashboard page when path is "/"', async () => {
       renderMockRoot();

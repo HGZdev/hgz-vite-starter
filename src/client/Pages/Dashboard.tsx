@@ -51,11 +51,12 @@ const Dashboard = () => {
         Logout
       </LogoutButton>
       <div>
-        <Title variant="h4">Welcome {data?.getUserMe.email}!</Title>
+        <Title variant="h4">Welcome {data?.getUserMe.firstName}!</Title>
         <Counter />
       </div>
     </FlexContainer>
   );
+  ``;
 };
 
 export default Dashboard;
