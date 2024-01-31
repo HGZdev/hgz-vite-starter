@@ -1,0 +1,51 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Root Component Tests > User is logged-out > renders landing page when path is "/" 1`] = `
+<div>
+  <div
+    class="sc-hKgKIp jbUdmH"
+    data-testid="LandingPage"
+  >
+    <div
+      class="MuiAvatar-root MuiAvatar-circular css-zxyrzw-MuiAvatar-root"
+    >
+      <img
+        alt="Favicon"
+        class="MuiAvatar-img css-1pqm26d-MuiAvatar-img"
+        src="/../assets/favicon.ico"
+      />
+    </div>
+    <p
+      class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+    >
+      Welcome!
+    </p>
+    <div
+      class="sc-eCstZk hQghqi"
+    >
+      <button
+        aria-label="Register"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium sc-jSguLX css-sghohy-MuiButtonBase-root-MuiButton-root"
+        tabindex="0"
+        type="button"
+      >
+        Register
+        <span
+          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+        />
+      </button>
+      <button
+        aria-label="Login"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium sc-gKsecS css-zcbmsk-MuiButtonBase-root-MuiButton-root"
+        tabindex="0"
+        type="button"
+      >
+        Login
+        <span
+          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+        />
+      </button>
+    </div>
+  </div>
+</div>
+`;
