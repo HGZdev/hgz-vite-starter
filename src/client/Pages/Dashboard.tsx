@@ -1,23 +1,11 @@
-import {Button, Typography, Container} from "@mui/material";
 import {useGetUserMe, useLogout} from "../../_server/queries";
 import Counter from "../Counter";
-import styled from "styled-components";
 
-const FlexContainer = styled(Container)`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 100vh;
-`;
+const FlexContainer = "flex flex-col items-center h-screen";
 
-const Title = styled(Typography)`
-  margin-bottom: 20px;
-`;
+const Title = "mb-8 text-2xl";
 
-const LogoutButton = styled(Button)`
-  align-self: flex-end;
-  margin-top: 20px;
-`;
+const LogoutButton = "self-end mt-4 bg-primary text-white px-4 py-2 rounded";
 
 const Dashboard = () => {
   const {loading, error, data} = useGetUserMe();
@@ -29,34 +17,36 @@ const Dashboard = () => {
 
   if (!data && loading)
     return (
-      <FlexContainer aria-busy="true" aria-live="polite">
-        <Typography>Loading...</Typography>
-      </FlexContainer>
+      <div
+        className={`${FlexContainer} text-center`}
+        aria-busy="true"
+        aria-live="polite"
+      >
+        <p>Loading...</p>
+      </div>
     );
   if (error)
     return (
-      <FlexContainer aria-live="assertive">
-        Error: {error.message}
-      </FlexContainer>
+      <div className={`${FlexContainer} text-center`} aria-live="assertive">
+        <p>Error: {error.message}</p>
+      </div>
     );
 
   return (
-    <FlexContainer data-testid="Dashboard">
-      <LogoutButton
-        variant="contained"
-        color="primary"
+    <div className={FlexContainer} data-testid="Dashboard">
+      <button
+        className={LogoutButton}
         onClick={handleLogout}
         aria-label="Logout Button"
       >
         Logout
-      </LogoutButton>
-      <div>
-        <Title variant="h4">Welcome {data?.getUserMe.firstName}!</Title>
+      </button>
+      <div className="mt-4">
+        <h4 className={Title}>Welcome {data?.getUserMe.firstName}!</h4>
         <Counter />
       </div>
-    </FlexContainer>
+    </div>
   );
-  ``;
 };
 
 export default Dashboard;

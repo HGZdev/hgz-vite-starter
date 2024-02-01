@@ -1,5 +1,4 @@
 // Root.tsx
-
 import React from "react";
 import {
   Route,
@@ -12,7 +11,7 @@ import config from "../../config/config.ts";
 import Registration from "./Pages/Registration.tsx";
 import ErrorPage from "./Pages/ErrorPage.tsx";
 import {makeApolloProvider} from "../../lib/apollo/ApolloClient.tsx";
-import GlobalStyles from "./GlobalStyles.ts";
+import GlobalStyles from "../styles/GlobalStyles.ts";
 
 export const ApolloProvider = makeApolloProvider(config);
 

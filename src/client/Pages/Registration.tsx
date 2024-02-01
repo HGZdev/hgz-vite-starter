@@ -2,22 +2,7 @@ import React from "react";
 import * as Yup from "yup";
 import {FormikForm, InputField} from "../Form/Form";
 import {useCheckUserExists, useSaveUser} from "../../_server/queries";
-import Button from "@mui/material/Button";
-import styled from "styled-components";
-import {Link} from "react-router-dom";
-import {Typography} from "@mui/material";
-
-const Container = styled.div`
-  padding: 1rem; /* Default padding for mobile devices */
-
-  @media (min-width: 600px) {
-    padding: 1rem 20%; /* Adjust padding for larger screens */
-  }
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-`;
+import {Link, useNavigate} from "react-router-dom";
 
 // Define validation schema
 const validationSchema = Yup.object().shape({
@@ -47,6 +32,7 @@ interface UserData {
 const RegistrationForm: React.FC = () => {
   const [checkUserExists] = useCheckUserExists();
   const [saveUser] = useSaveUser();
+  const navigate = useNavigate();
 
   // Define the type for the function used in validate prop
   const checkUserExistsAsync: (
@@ -77,7 +63,7 @@ const RegistrationForm: React.FC = () => {
       onSubmit={async (values) => {
         try {
           await saveUser(values);
-          window.location.href = "/";
+          navigate("/");
         } catch (error) {
           console.error("Error during registration:", error);
         }
@@ -101,7 +87,7 @@ const RegistrationForm: React.FC = () => {
       <InputField
         label="ConfirmPassword"
         name="confirmPassword"
-        type="text"
+        type="password"
         autoComplete="new-password"
         aria-label="Confirm Password Input"
       />
@@ -119,29 +105,31 @@ const RegistrationForm: React.FC = () => {
         autoComplete="family-name"
         aria-label="Last Name Input"
       />
-      <Button
+      <button
         type="submit"
-        variant="contained"
-        color="primary"
+        className="bg-primary text-white px-4 py-2 rounded"
         aria-label="Register Button"
       >
         Register
-      </Button>
+      </button>
     </FormikForm>
   );
 };
 
 const Registration = () => {
   return (
-    <Container data-testid="Registration">
-      <Link to="/">
-        <Button color="primary" startIcon={"<"} aria-label="Back Button">
+    <div data-testid="Registration" className="p-4">
+      <Link to="/" className="mb-4">
+        <button
+          className="bg-primary text-white px-4 py-2 rounded"
+          aria-label="Back Button"
+        >
           Back
-        </Button>
+        </button>
       </Link>
-      <Typography>Registration</Typography>
+      <h2 className="text-2xl mb-4">Registration</h2>
       <RegistrationForm />
-    </Container>
+    </div>
   );
 };
 

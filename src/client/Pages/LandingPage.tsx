@@ -1,92 +1,84 @@
 // LandingPage.tsx
 
 import React, {useState} from "react";
-import {Button, CircularProgress, Typography} from "@mui/material";
-import {useGetUserMe} from "../../_server/queries";
 import LoginModal from "../Modals/LoginModal";
 import Dashboard from "./Dashboard";
-import styled from "styled-components";
-import {useNavigate} from "react-router-dom";
 import FancyAvatar from "../Avatar";
-import Snowfall from "react-snowfall";
+// import Snowfall from "react-snowfall";
+import {useGetUserMe} from "../../_server/queries";
+import {useNavigate} from "react-router-dom";
 
-const LandingPageContainer = styled("div")`
-  background: linear-gradient(to bottom, #87cefa, #4f94cd);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-`;
+const LandingPageContainer =
+  "bg-gradient-to-b from-sky-blue to-steel-blue flex flex-col items-center justify-center h-screen";
 
-const Title = styled(Typography)`
-  font-size: 2.5em;
-  color: white;
-  text-align: center;
-  margin-bottom: 20px;
-`;
+const Title = "text-black text-2.5xl text-center mb-4";
 
-const ButtonContainer = styled("div")`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
-  margin-top: 20px;
-`;
+const ButtonContainer = "flex flex-row items-center gap-4 mt-4";
+
+const ButtonPrimary = "bg-primary text-black px-4 py-2 rounded";
+const ButtonSecondary = "bg-secondary text-white px-4 py-2 rounded";
+
+const CircularProgressStyled = "text-white";
 
 const LandingPage: React.FC = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
+
   const {data, loading, error} = useGetUserMe();
   const navigate = useNavigate();
 
   if (!data && loading)
-    return <CircularProgress data-testid="loading" aria-label="loading" />;
-  if (error) return <Typography>Error: {error.message}</Typography>;
+    return (
+      <div
+        data-testid="loading"
+        className={CircularProgressStyled}
+        aria-label="loading"
+      >
+        Loading...
+      </div>
+    );
+  if (error) return <div>Error: {error.message}</div>;
 
   const getUserMe = data?.getUserMe;
 
-  if (showLoginModal) {
-    return (
-      <LoginModal
-        open={showLoginModal}
-        onClose={() => setShowLoginModal(false)}
-      />
-    );
-  }
+  const openLoginModal = () => setShowLoginModal(true);
 
   return (
-    <LandingPageContainer data-testid="LandingPage">
+    <div data-testid="LandingPage" className={LandingPageContainer}>
       {!getUserMe ? (
         <>
           <FancyAvatar />
-          <Snowfall />
-          <Title variant="h2">Welcome to My Awesome Starter! ☕️</Title>
-          <Typography color="white" variant="body1" paragraph>
+          {/* <Snowfall /> */}
+          <div className={Title}>Welcome to My Awesome Starter! ☕️</div>
+          <div className="text-blue-300">
             Explore, Learn, and Enjoy Your Stay!
-          </Typography>
-          <ButtonContainer>
-            <Button
-              variant="contained"
-              color="primary"
+          </div>
+          <div className={ButtonContainer}>
+            <button
+              className={ButtonPrimary}
               onClick={() => navigate("/registration")}
               aria-label="Register"
             >
               Register
-            </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => setShowLoginModal(true)}
+            </button>
+            <button
+              className={ButtonSecondary}
+              onClick={openLoginModal}
               aria-label="Login"
             >
               Login
-            </Button>
-          </ButtonContainer>
+            </button>
+          </div>
         </>
       ) : (
         <Dashboard />
       )}
-    </LandingPageContainer>
+      {showLoginModal && (
+        <LoginModal
+          open={showLoginModal}
+          onClose={() => setShowLoginModal(false)}
+        />
+      )}
+    </div>
   );
 };
 

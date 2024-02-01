@@ -5,15 +5,6 @@ import {InputField} from "../Form/Form";
 import {Link} from "react-router-dom";
 import {Form, Formik} from "formik";
 import {useLogin} from "../../_server/queries";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Typography,
-  Box, // Import Box from @mui/material to use flexbox
-} from "@mui/material";
 
 // Define validation schema
 const validationSchema = Yup.object().shape({
@@ -70,25 +61,29 @@ const LoginForm: React.FC<LoginFormProps> = ({onClose}) => {
           autoComplete="current-password"
         />
         {loginError && (
-          <span data-testid="error-banner">
-            <Typography variant="caption" color="error">
-              {loginError}
-            </Typography>
-          </span>
+          <div data-testid="error-banner" className="text-red-500 text-sm">
+            {loginError}
+          </div>
         )}
-        <DialogActions>
-          <Box flexGrow={1}>
-            <Link to="/registration">
-              <Button color="primary">Register</Button>
-            </Link>
-          </Box>
-          <Button onClick={onClose} color="secondary">
-            Cancel
-          </Button>
-          <Button type="submit" variant="contained" color="primary">
-            Login
-          </Button>
-        </DialogActions>
+        <div className="flex items-center justify-between mt-4">
+          <Link to="/registration" className="text-primary">
+            Register
+          </Link>
+          <div className="flex gap-4">
+            <button
+              onClick={onClose}
+              className="text-secondary hover:text-gray-700"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="bg-primary text-white px-4 py-2 rounded"
+            >
+              Login
+            </button>
+          </div>
+        </div>
       </Form>
     </Formik>
   );
@@ -101,18 +96,17 @@ export interface LoginModalProps {
 
 const LoginModal: React.FC<LoginModalProps> = ({onClose, open}) => {
   return (
-    <Dialog
+    <div
       data-testid="LoginModal"
-      open={open}
-      onClose={onClose}
-      maxWidth="sm"
-      fullWidth
+      className={`fixed inset-0 flex items-center justify-center ${
+        open ? "visible" : "hidden"
+      }`}
     >
-      <DialogTitle>Login</DialogTitle>
-      <DialogContent>
+      <div className="bg-white p-6 rounded shadow-lg max-w-md">
+        <h2 className="text-2xl font-bold mb-4">Login</h2>
         <LoginForm onClose={onClose} />
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   );
 };
 

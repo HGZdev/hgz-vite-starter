@@ -8,7 +8,6 @@ import {
   Form,
   FormikValues,
 } from "formik";
-import {TextField, Typography} from "@mui/material";
 
 // Define types for the InputField props
 interface InputFieldProps {
@@ -24,18 +23,13 @@ export const InputField: React.FC<InputFieldProps> = ({name, ...props}) => {
     <>
       <Field
         name={name}
-        as={TextField}
+        as="input" // Replaced MUI TextField with a regular input
         {...props}
-        variant="outlined"
-        margin="normal"
-        fullWidth
-        InputLabelProps={{
-          shrink: true,
-        }}
+        className="border p-2 w-full"
       />
-      <Typography component="div" variant="caption" color="error">
+      <div className="text-red-500 text-sm">
         <ErrorMessage name={name} />
-      </Typography>
+      </div>
     </>
   );
 };
@@ -50,6 +44,6 @@ export const FormikForm = <T extends FormikValues>({
   ...props
 }: FormikFormProps<T>) => (
   <Formik {...props}>
-    <Form>{children}</Form>
+    <Form className="max-w-md mx-auto">{children}</Form>
   </Formik>
 );
