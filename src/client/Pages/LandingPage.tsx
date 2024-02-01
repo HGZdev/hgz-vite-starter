@@ -8,17 +8,17 @@ import FancyAvatar from "../Avatar";
 import {useGetUserMe} from "../../_server/queries";
 import {useNavigate} from "react-router-dom";
 
-const LandingPageContainer =
-  "bg-gradient-to-b from-sky-blue to-steel-blue flex flex-col items-center justify-center h-screen";
+// const LandingPageContainer =
+//   "bg-gradient-to-b from-sky-blue to-steel-blue flex flex-col items-center justify-center h-screen";
 
-const Title = "text-black text-2.5xl text-center mb-4";
+// const Title = "text-black text-2.5xl text-center mb-4";
 
-const ButtonContainer = "flex flex-row items-center gap-4 mt-4";
+// const ButtonContainer = "flex flex-row items-center gap-4 mt-4";
 
-const ButtonPrimary = "bg-primary text-black px-4 py-2 rounded";
-const ButtonSecondary = "bg-secondary text-white px-4 py-2 rounded";
+// const ButtonPrimary = "bg-primary text-black px-4 py-2 rounded";
+// const ButtonSecondary = "bg-secondary text-white px-4 py-2 rounded";
 
-const CircularProgressStyled = "text-white";
+// const CircularProgressStyled = "text-white";
 
 const LandingPage: React.FC = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -28,11 +28,7 @@ const LandingPage: React.FC = () => {
 
   if (!data && loading)
     return (
-      <div
-        data-testid="loading"
-        className={CircularProgressStyled}
-        aria-label="loading"
-      >
+      <div data-testid="loading" className="" aria-label="loading">
         Loading...
       </div>
     );
@@ -43,28 +39,22 @@ const LandingPage: React.FC = () => {
   const openLoginModal = () => setShowLoginModal(true);
 
   return (
-    <div data-testid="LandingPage" className={LandingPageContainer}>
+    <div data-testid="LandingPage" className="">
       {!getUserMe ? (
         <>
           <FancyAvatar />
           {/* <Snowfall /> */}
-          <div className={Title}>Welcome to My Awesome Starter! ☕️</div>
-          <div className="text-blue-300">
-            Explore, Learn, and Enjoy Your Stay!
-          </div>
-          <div className={ButtonContainer}>
+          <div className="">Welcome to My Awesome Starter! ☕️</div>
+          <div className="">Explore, Learn, and Enjoy Your Stay!</div>
+          <div className="">
             <button
-              className={ButtonPrimary}
+              className=""
               onClick={() => navigate("/registration")}
               aria-label="Register"
             >
               Register
             </button>
-            <button
-              className={ButtonSecondary}
-              onClick={openLoginModal}
-              aria-label="Login"
-            >
+            <button className="" onClick={openLoginModal} aria-label="Login">
               Login
             </button>
           </div>
