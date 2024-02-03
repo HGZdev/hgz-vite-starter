@@ -1,8 +1,14 @@
 import React from "react";
 import * as Yup from "yup";
-import {FormikForm, InputField} from "../Form/Form";
-import {useCheckUserExists, useSaveUser} from "../../_server/queries";
+
+import {useCheckUserExists, useSaveUser} from "../../../_server/queries";
 import {Link, useNavigate} from "react-router-dom";
+import {ButtonPrimary, ButtonSecondary} from "../../Components/Buttons";
+import {
+  FormikForm,
+  SelectInputField,
+  TextInputField,
+} from "../../Components/Form";
 
 // Define validation schema
 const validationSchema = Yup.object().shape({
@@ -18,6 +24,7 @@ const validationSchema = Yup.object().shape({
     .oneOf([Yup.ref("password")], "Passwords must match"),
   firstName: Yup.string().required("First name is required"),
   lastName: Yup.string().required("Last name is required"),
+  gender: Yup.number().required("Gender is required"),
 });
 
 // Define types for user data
@@ -26,6 +33,7 @@ interface UserData {
   password: string;
   firstName: string;
   lastName: string;
+  gender?: number;
 }
 
 // Define the RegistrationForm component
@@ -58,6 +66,7 @@ const RegistrationForm: React.FC = () => {
         password: "",
         firstName: "",
         lastName: "",
+        gender: undefined,
       }}
       validationSchema={validationSchema}
       onSubmit={async (values) => {
@@ -69,7 +78,7 @@ const RegistrationForm: React.FC = () => {
         }
       }}
     >
-      <InputField
+      <TextInputField
         label="Email"
         name="email"
         type="email"
@@ -77,58 +86,71 @@ const RegistrationForm: React.FC = () => {
         autoComplete="email"
         aria-label="Email Input"
       />
-      <InputField
+      <TextInputField
         label="Password"
         name="password"
         type="password"
         autoComplete="new-password"
         aria-label="Password Input"
       />
-      <InputField
+      <TextInputField
         label="ConfirmPassword"
         name="confirmPassword"
         type="password"
         autoComplete="new-password"
         aria-label="Confirm Password Input"
       />
-      <InputField
+      <TextInputField
         label="First name"
         name="firstName"
         type="text"
         autoComplete="given-name"
         aria-label="First Name Input"
       />
-      <InputField
+      <TextInputField
         label="Last name"
         name="lastName"
         type="text"
         autoComplete="family-name"
         aria-label="Last Name Input"
       />
-      <button
-        type="submit"
-        className="bg-primary text-white px-4 py-2 rounded"
-        aria-label="Register Button"
-      >
-        Register
-      </button>
+      <SelectInputField
+        label="gender"
+        name="gender"
+        autoComplete="gender"
+        aria-label="gender"
+        options={[
+          {value: undefined, label: ""},
+          {value: 1, label: "female"},
+          {value: 2, label: "male"},
+        ]}
+      />
+
+      <div className="flex justify-end">
+        <ButtonPrimary type="submit" aria-label="Register Button">
+          Register
+        </ButtonPrimary>
+      </div>
     </FormikForm>
   );
 };
 
 const Registration = () => {
   return (
-    <div data-testid="Registration" className="p-4">
-      <Link to="/" className="mb-4">
-        <button
-          className="bg-primary text-white px-4 py-2 rounded"
-          aria-label="Back Button"
-        >
-          Back
-        </button>
-      </Link>
-      <h2 className="text-2xl mb-4">Registration</h2>
-      <RegistrationForm />
+    <div data-testid="Registration" className="flex justify-center">
+      <div className="flex flex-col gap-4 p-4 w-full max-w-screen-lg">
+        <div>
+          <Link to="/">
+            <ButtonSecondary aria-label="Back Button" className="btn-outline">
+              Back
+            </ButtonSecondary>
+          </Link>
+        </div>
+        <h2 className="text-center text-2xl mb-4">Registration</h2>
+        <div className="flex flex-col gap-4">
+          <RegistrationForm />
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,8 +1,8 @@
 // LoginModal.test.tsx
-import {screen, waitFor} from "@testing-library/react";
+import {waitFor} from "@testing-library/react";
 import userEvent, {type UserEvent} from "@testing-library/user-event";
 import {describe, test, beforeEach, expect, vi} from "vitest";
-import {mockServer} from "../../tests/vitestSetup";
+import {mockServer} from "../../../tests/vitestSetup";
 import {
   counterIncrementingRes,
   getUserLoggedInRes,
@@ -10,12 +10,16 @@ import {
   getUserMeNotLoggedInRes,
   makeInvalidCredsLogin,
   makeSuccessfulLogin,
-} from "../../tests/graphqlHandlers";
-import {findBtn, findId, findText} from "../../tests/testing-library/helpers";
+} from "../../../tests/graphqlHandlers";
+import {
+  findBtn,
+  findId,
+  findText,
+} from "../../../tests/testing-library/helpers";
 import {Route} from "react-router-dom";
 import LoginModal from "./LoginModal";
-import LandingPage from "../Pages/LandingPage";
-import {renderMockRoot} from "../../tests/testing-library/Components";
+import {renderMockRoot} from "../../../tests/testing-library/Components";
+import {RoutesConfig} from "../../Root";
 
 describe("LoginModal Component Tests", () => {
   let onCloseMock: () => void;
@@ -26,19 +30,18 @@ describe("LoginModal Component Tests", () => {
     mockServer.use(getUserMeNotLoggedInRes, ...counterIncrementingRes);
   });
 
-  test("go to LoginModal, than go back when Cancel button is clicked", async () => {
+  test("LandingPage:Login (clicked) => LoginModal:Cancel => LandingPage:Login => LoginModal:Register => Registration", async () => {
     const {router} = renderMockRoot({
       initialEntries: ["/"],
-      Routes: <Route path="/" element={<LandingPage />} />,
+      Routes: RoutesConfig,
     });
 
-    expect(screen.getByTestId("loading"));
     expect(await findBtn("Login"));
-
     await user.click(await findBtn("Login"));
 
+    // screen.debug();
     expect(await findId("LoginModal")).toMatchSnapshot();
-    expect(await findBtn("Register"));
+    expect(await findText("Register"));
     expect(await findBtn("Cancel"));
     expect(await findBtn("Login"));
 
@@ -46,14 +49,19 @@ describe("LoginModal Component Tests", () => {
 
     expect(router.state.location.pathname).toEqual("/");
     expect(await findId("LandingPage"));
+
+    await user.click(await findBtn("Login"));
+    expect(await findText("Register"));
+    await user.click(await findText("Register"));
+
+    expect(router.state.location.pathname).toEqual("/registration");
+    expect(await findId("Registration"));
   });
 
   test("calls onClose when Cancel button is clicked", async () => {
     renderMockRoot({
       initialEntries: ["/"],
-      Routes: (
-        <Route path="/" element={<LoginModal open onClose={onCloseMock} />} />
-      ),
+      Routes: <Route path="/" element={<LoginModal onClose={onCloseMock} />} />,
     });
 
     expect(await findBtn("Cancel"));
@@ -64,9 +72,7 @@ describe("LoginModal Component Tests", () => {
   test("displays validation errors for empty fields on form submission", async () => {
     renderMockRoot({
       initialEntries: ["/"],
-      Routes: (
-        <Route path="/" element={<LoginModal open onClose={onCloseMock} />} />
-      ),
+      Routes: <Route path="/" element={<LoginModal onClose={onCloseMock} />} />,
     });
     user.click(await findBtn("Login"));
 
@@ -83,9 +89,7 @@ describe("LoginModal Component Tests", () => {
       render: {findByLabelText},
     } = renderMockRoot({
       initialEntries: ["/"],
-      Routes: (
-        <Route path="/" element={<LoginModal open onClose={onCloseMock} />} />
-      ),
+      Routes: <Route path="/" element={<LoginModal onClose={onCloseMock} />} />,
     });
 
     // Trigger a login attempt
@@ -111,9 +115,7 @@ describe("LoginModal Component Tests", () => {
       render: {findByLabelText},
     } = renderMockRoot({
       initialEntries: ["/"],
-      Routes: (
-        <Route path="/" element={<LoginModal open onClose={onCloseMock} />} />
-      ),
+      Routes: <Route path="/" element={<LoginModal onClose={onCloseMock} />} />,
     });
 
     await user.type(await findByLabelText("Email"), "user@example.com");

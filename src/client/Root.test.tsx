@@ -18,11 +18,10 @@ describe("Root Component Tests", () => {
       user = userEvent.setup();
       mockServer.use(getUserMeNotLoggedInRes, ...counterIncrementingRes);
     });
-    test('renders landing page when path is "/"', async () => {
+    test('renders LandingPage page when path is "/"', async () => {
       const {
         render: {container},
       } = renderMockRoot();
-      expect(screen.getByTestId("loading"));
 
       expect(await findId("LandingPage"));
       expect(await findBtn(/Register/i));
@@ -38,7 +37,6 @@ describe("Root Component Tests", () => {
 
     test("navigates to registration page when clicking Register button", async () => {
       const {router} = renderMockRoot({initialEntries: ["/"]});
-      expect(screen.getByTestId("loading"));
 
       expect(await findBtn(/Register/i));
       await user.click(await findBtn(/Register/i));
@@ -63,13 +61,14 @@ describe("Root Component Tests", () => {
     beforeEach(() => {
       mockServer.use(getUserMeLoggedInRes, ...counterIncrementingRes);
     });
-    test('renders dashboard page when path is "/"', async () => {
-      renderMockRoot();
+    test('renders dashboard page when path is "/dashboard"', async () => {
+      renderMockRoot({initialEntries: ["/dashboard"]});
 
       expect(screen.getByTestId("loading"));
 
       expect(await findId("Dashboard"));
-      expect(await findBtn(/Logout/i));
+      expect(await findId("Navbar"));
+      expect((await screen.findAllByText(/Logout/i)).length).toEqual(2);
     });
   });
 });
