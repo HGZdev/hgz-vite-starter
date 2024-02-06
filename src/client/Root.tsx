@@ -1,5 +1,4 @@
 // Root.tsx
-
 import React from "react";
 import {
   Route,
@@ -7,12 +6,14 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
-import LandingPage from "./Pages/LandingPage.tsx";
+import LandingPage from "./Pages/Public/LandingPage.tsx";
 import config from "../../config/config.ts";
-import Registration from "./Pages/Registration.tsx";
-import ErrorPage from "./Pages/ErrorPage.tsx";
+import Registration from "./Pages/Public/Registration.tsx";
+import ErrorPage from "./Pages/Public/ErrorPage.tsx";
 import {makeApolloProvider} from "../../lib/apollo/ApolloClient.tsx";
-import GlobalStyles from "./GlobalStyles.ts";
+import GlobalStyles from "../styles/GlobalStyles.ts";
+import PrivateRoute from "./Pages/Private/PrivateRoute.tsx";
+import Dashboard from "./Pages/Private/Dashboard.tsx";
 
 export const ApolloProvider = makeApolloProvider(config);
 
@@ -20,6 +21,7 @@ export const RoutesConfig = (
   <>
     <Route path="/" element={<LandingPage />} errorElement={<ErrorPage />} />
     <Route path="/registration" element={<Registration />} />
+    <Route path="/dashboard" element={<PrivateRoute Component={Dashboard} />} />
     <Route path="*" element={<ErrorPage />} />
   </>
 );

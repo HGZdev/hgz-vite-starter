@@ -1,0 +1,255 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`LoginModal Component Tests > LandingPage:Login (clicked) => LoginModal:Cancel => LandingPage:Login => LoginModal:Register => Registration 1`] = `
+<dialog
+  class="modal"
+  data-testid="LoginModal"
+  id="LoginModal"
+  open=""
+>
+  <div
+    class="modal-box"
+  >
+    <h3
+      class="font-bold text-lg"
+    >
+      Login
+    </h3>
+    <form
+      action="#"
+      data-theme="form"
+    >
+      <label
+        class="form-control w-full "
+      >
+        <div
+          class="label"
+        >
+          <span
+            class="label-text"
+          >
+            Email
+          </span>
+          <span
+            class="label-text-alt"
+          />
+          <span
+            class="label-text-alt"
+          />
+        </div>
+        <input
+          autocomplete="email"
+          class="input input-bordered w-full input-sm"
+          name="email"
+          type="email"
+          value=""
+        />
+        <div
+          class="label"
+        >
+          <span
+            class="label-text-alt text-error"
+          />
+          <span
+            class="label-text-alt text-error"
+          />
+          <span
+            class="label-text-alt text-error"
+          />
+        </div>
+      </label>
+      <label
+        class="form-control w-full "
+      >
+        <div
+          class="label"
+        >
+          <span
+            class="label-text"
+          >
+            Password
+          </span>
+          <span
+            class="label-text-alt"
+          />
+          <span
+            class="label-text-alt"
+          />
+        </div>
+        <input
+          autocomplete="current-password"
+          class="input input-bordered w-full input-sm"
+          name="password"
+          type="password"
+          value=""
+        />
+        <div
+          class="label"
+        >
+          <span
+            class="label-text-alt text-error"
+          />
+          <span
+            class="label-text-alt text-error"
+          />
+          <span
+            class="label-text-alt text-error"
+          />
+        </div>
+      </label>
+      <div
+        class="flex items-center justify-between mt-4"
+      >
+        <a
+          class="btn btn-sm  btn-secondary shadow-md shadow-gray-300  "
+          href="/registration"
+        >
+          Register
+        </a>
+        <div
+          class="flex gap-4"
+        >
+          <button
+            class="btn btn-sm  btn-secondary shadow-md shadow-gray-300 btn-outline "
+          >
+            Cancel
+          </button>
+          <button
+            class="btn btn-sm  btn-primary shadow-md shadow-gray-300 btn-primary"
+            type="submit"
+          >
+            Login
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</dialog>
+`;
+
+exports[`LoginModal Component Tests > go to LoginModal, than go back when Cancel button is clicked 1`] = `
+<dialog
+  class="modal"
+  data-testid="LoginModal"
+  id="LoginModal"
+  open=""
+>
+  <div
+    class="modal-box"
+  >
+    <h3
+      class="font-bold text-lg"
+    >
+      Login
+    </h3>
+    <form
+      action="#"
+      data-theme="form"
+    >
+      <label
+        class="form-control w-full "
+      >
+        <div
+          class="label"
+        >
+          <span
+            class="label-text"
+          >
+            Email
+          </span>
+          <span
+            class="label-text-alt"
+          />
+          <span
+            class="label-text-alt"
+          />
+        </div>
+        <input
+          autocomplete="email"
+          class="input input-bordered w-full input-sm"
+          name="email"
+          type="email"
+          value=""
+        />
+        <div
+          class="label"
+        >
+          <span
+            class="label-text-alt text-error"
+          />
+          <span
+            class="label-text-alt text-error"
+          />
+          <span
+            class="label-text-alt text-error"
+          />
+        </div>
+      </label>
+      <label
+        class="form-control w-full "
+      >
+        <div
+          class="label"
+        >
+          <span
+            class="label-text"
+          >
+            Password
+          </span>
+          <span
+            class="label-text-alt"
+          />
+          <span
+            class="label-text-alt"
+          />
+        </div>
+        <input
+          autocomplete="current-password"
+          class="input input-bordered w-full input-sm"
+          name="password"
+          type="password"
+          value=""
+        />
+        <div
+          class="label"
+        >
+          <span
+            class="label-text-alt text-error"
+          />
+          <span
+            class="label-text-alt text-error"
+          />
+          <span
+            class="label-text-alt text-error"
+          />
+        </div>
+      </label>
+      <div
+        class="flex items-center justify-between mt-4"
+      >
+        <a
+          class="btn btn-sm  btn-secondary shadow-md shadow-gray-300  "
+          href="/registration"
+        >
+          Register
+        </a>
+        <div
+          class="flex gap-4"
+        >
+          <button
+            class="btn btn-sm  btn-secondary shadow-md shadow-gray-300 btn-outline "
+          >
+            Cancel
+          </button>
+          <button
+            class="btn btn-sm  btn-primary shadow-md shadow-gray-300 btn-primary"
+            type="submit"
+          >
+            Login
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</dialog>
+`;

@@ -1,5 +1,350 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`Root Component Tests > User is logged-in > renders dashboard page when path is "/" 1`] = `
+<div
+  class="flex flex-col items-center h-screen"
+  data-testid="Dashboard"
+>
+  <div
+    class="mt-4 base-"
+  >
+    <h4
+      class="mb-8 text-2xl text-primary "
+    >
+      Welcome 
+      John
+      !
+    </h4>
+    <div
+      class="max-w-xs mx-auto mt-8 p-4 border border-gray-300 rounded"
+    >
+      <h4
+        class="text-2xl mb-4"
+      >
+        Counter
+      </h4>
+      <div
+        class="flex items-center justify-center"
+      >
+        <div
+          class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Root Component Tests > User is logged-in > renders dashboard page when path is "/dashboard" 1`] = `
+<div
+  class="flex flex-col items-center h-screen"
+  data-testid="Dashboard"
+>
+  <div
+    class="mt-4 base-"
+  >
+    <h4
+      class="mb-8 text-2xl text-primary "
+    >
+      Welcome 
+      John
+      !
+    </h4>
+    <div
+      class="max-w-xs mx-auto mt-8 p-4 border border-gray-300 rounded"
+    >
+      <h4
+        class="text-2xl mb-4"
+      >
+        Counter
+      </h4>
+      <div
+        class="flex items-center justify-center"
+      >
+        <div
+          class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Root Component Tests > User is logged-in > renders dashboard page when path is "/dashboard" 2`] = `
+<div
+  class="flex justify-center bg-primary"
+  data-testid="Navbar"
+  data-theme="navbar"
+>
+  <div
+    class="drawer max-w-screen-lg"
+  >
+    <input
+      class="drawer-toggle"
+      id="Navbar"
+      type="checkbox"
+    />
+    <div
+      class="drawer-content flex flex-col"
+    >
+      <div
+        class="navbar w-full"
+      >
+        <div
+          class="flex-none lg:hidden"
+        >
+          <label
+            aria-label="open sidebar"
+            class="btn btn-square btn-ghost"
+            for="Navbar"
+          >
+            <svg
+              class="inline-block w-6 h-6 stroke-current text-secondary-content"
+              fill="none"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M4 6h16M4 12h16M4 18h16"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+              />
+            </svg>
+          </label>
+        </div>
+        <div
+          class="flex-1 px-2 mx-2"
+        >
+          <a
+            href="/dashboard"
+          >
+            <div
+              class="avatar"
+            >
+              <div
+                class="w-12 rounded-full"
+              >
+                <img
+                  alt="avatar"
+                  src="/../assets/favicon.ico"
+                />
+              </div>
+            </div>
+          </a>
+        </div>
+        <div
+          class="flex-none hidden lg:block"
+        >
+          <ul
+            class="menu menu-horizontal items-center gap-4 "
+          >
+            <li>
+              <a
+                class="btn btn-sm  btn-secondary shadow-md shadow-gray-300 btn-ghost shadow-none   "
+                href="https://www.google.pl"
+              >
+                Link button
+              </a>
+            </li>
+            <li>
+              <a
+                class="btn btn-sm  btn-secondary shadow-md shadow-gray-300 btn-ghost shadow-none   "
+                href="/registration"
+              >
+                Router link button
+              </a>
+            </li>
+            <li>
+              <button
+                class="btn btn-sm  btn-secondary shadow-md shadow-gray-300 btn-ghost shadow-none   "
+              >
+                Just button
+              </button>
+            </li>
+            <li>
+              <button
+                class="btn btn-sm  btn-secondary shadow-md shadow-gray-300 btn-ghost shadow-none   "
+              >
+                Just button
+              </button>
+            </li>
+            <li>
+              <button
+                class="btn btn-sm  btn-secondary shadow-md shadow-gray-300 btn-ghost shadow-none   "
+              >
+                Just button
+              </button>
+            </li>
+            <li>
+              <button
+                class="btn btn-sm  btn-secondary shadow-md shadow-gray-300 btn-ghost shadow-none   "
+              >
+                Just button
+              </button>
+            </li>
+            <li>
+              <div
+                class="dropdown dropdown-bottom dropdown-end p-0"
+              >
+                <button
+                  class="btn btn-sm  btn-secondary shadow-md shadow-gray-300 btn-ghost shadow-none   "
+                  role="button"
+                  tabindex="0"
+                >
+                  Account
+                </button>
+                <ul
+                  class="menu dropdown-content z-[1] p-2 shadow rounded-box w-52 mt-4"
+                  data-theme="main"
+                  tabindex="0"
+                >
+                  <li>
+                    <a
+                      class=""
+                    >
+                      Just button
+                    </a>
+                  </li>
+                  <li>
+                    <button
+                      class="btn btn-sm  btn-secondary shadow-md shadow-gray-300 btn-ghost shadow-none flex justify-start   "
+                    >
+                      Just button
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      aria-label="Logout Button"
+                      class="btn btn-sm  btn-secondary shadow-md shadow-gray-300 btn-ghost shadow-none flex justify-start    "
+                    >
+                      Logout
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div
+      class="drawer-side"
+    >
+      <label
+        aria-label="close sidebar"
+        class="drawer-overlay"
+        for="Navbar"
+      />
+      <ul
+        class="menu p-2 w-80 min-h-full bg-black bg-opacity-80"
+      >
+        <label
+          aria-label="open sidebar"
+          class="btn btn-square btn-ghost"
+          for="Navbar"
+        >
+          ✕
+        </label>
+        <span
+          class="divider m-0 px-2 divider-primary"
+        />
+        <li>
+          <a
+            class="btn btn-sm  btn-secondary shadow-md shadow-gray-300 btn-ghost shadow-none flex justify-start  "
+            href="https://www.google.pl"
+          >
+            Link button
+          </a>
+        </li>
+        <li>
+          <a
+            class="btn btn-sm  btn-secondary shadow-md shadow-gray-300 btn-ghost shadow-none flex justify-start  "
+            href="/registration"
+          >
+            Router link button
+          </a>
+        </li>
+        <li>
+          <button
+            class="btn btn-sm  btn-secondary shadow-md shadow-gray-300 btn-ghost shadow-none flex justify-start  "
+          >
+            Just button
+          </button>
+        </li>
+        <li>
+          <button
+            class="btn btn-sm  btn-secondary shadow-md shadow-gray-300 btn-ghost shadow-none flex justify-start  "
+          >
+            Just button
+          </button>
+        </li>
+        <span
+          class="divider m-0 px-2 divider-primary"
+        />
+        <li>
+          <button
+            aria-label="Logout Button"
+            class="btn btn-sm  btn-secondary shadow-md shadow-gray-300 btn-ghost shadow-none flex justify-start   "
+          >
+            Logout
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Root Component Tests > User is logged-out > renders LandingPage page when path is "/" 1`] = `
+<div>
+  <div
+    class=" flex flex-col items-center justify-center h-screen gap-4"
+    data-testid="LandingPage"
+  >
+    <div
+      class="avatar"
+    >
+      <div
+        class="w-60 rounded-full"
+      >
+        <img
+          alt="avatar"
+          class="sc-bdfCDU gBALiN"
+          src="/../assets/favicon.ico"
+        />
+      </div>
+    </div>
+    <h1
+      class="text-4xl font-sans text-center"
+    >
+      Welcome to My Awesome Starter! ☕️
+    </h1>
+    <p
+      class="text-2xl font-sans"
+    >
+      Explore, Learn, and Enjoy Your Stay!
+    </p>
+    <div
+      class="flex justify-center gap-4"
+    >
+      <button
+        aria-label="Register"
+        class="btn btn-sm  btn-secondary shadow-md shadow-gray-300 btn-block "
+      >
+        Register
+      </button>
+      <button
+        aria-label="Login"
+        class="btn btn-sm  btn-primary shadow-md shadow-gray-300 btn-block"
+      >
+        Login
+      </button>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Root Component Tests > User is logged-out > renders landing page when path is "/" 1`] = `
 <div>
   <div

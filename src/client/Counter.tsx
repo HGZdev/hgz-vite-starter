@@ -1,4 +1,3 @@
-import {Button, Typography, Container, CircularProgress} from "@mui/material";
 import {useGetCounter, useIncrementCounter} from "../_server/queries";
 
 const CounterContainer = () => {
@@ -16,38 +15,29 @@ const CounterContainer = () => {
   };
 
   return (
-    <Container
-      component="main"
-      maxWidth="xs"
-      style={{
-        textAlign: "center",
-        marginTop: "2rem",
-        padding: "1rem",
-        border: "2px solid #eeeeee",
-        borderRadius: "8px",
-      }}
-    >
-      <Typography variant="h4">Counter</Typography>
+    <div className="max-w-xs mx-auto mt-8 p-4 border border-gray-300 rounded">
+      <h4 className="text-2xl mb-4">Counter</h4>
       {loading ? (
-        <CircularProgress />
+        <div className="flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+        </div>
       ) : error ? (
-        <Typography color="error">Error: {error.message}</Typography>
+        <p className="text-red-500">Error: {error.message}</p>
       ) : (
         <>
-          <Typography variant="h5" gutterBottom>
+          <h5 className="text-xl mb-4">
             Current Count: {data?.getCounter.value ?? 0}
-          </Typography>
-          <Button
-            variant="contained"
-            color="primary"
+          </h5>
+          <button
+            className="bg-blue-500 text-white px-4 py-2 rounded"
             onClick={handleIncrement}
             aria-label="Increment the counter"
           >
             Increment
-          </Button>
+          </button>
         </>
       )}
-    </Container>
+    </div>
   );
 };
 

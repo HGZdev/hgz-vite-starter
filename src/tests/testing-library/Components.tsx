@@ -5,7 +5,7 @@ import {
 } from "react-router-dom";
 import config from "../../../config/config";
 import {makeApolloProvider} from "../../../lib/apollo/ApolloClient";
-import GlobalStyles from "../../client/GlobalStyles";
+import GlobalStyles from "../../styles/GlobalStyles";
 import {RoutesConfig} from "../../client/Root";
 import {render} from "@testing-library/react";
 
