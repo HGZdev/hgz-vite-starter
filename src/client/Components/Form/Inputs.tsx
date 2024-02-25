@@ -108,7 +108,7 @@ export const SelectInputField: React.FC<SelectInputFieldProps> = ({
     <label className="form-control w-full">
       <LabelPanel {...{labelTopLeft, labelTopCenter, labelTopRight}} />
       <Field
-        className="select select-bordered w-full"
+        className="select select-bordered w-full select-sm"
         as="select"
         name={name}
         type={type}

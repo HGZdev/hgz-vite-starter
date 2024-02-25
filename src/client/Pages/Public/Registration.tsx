@@ -78,53 +78,55 @@ const RegistrationForm: React.FC = () => {
         }
       }}
     >
-      <TextInputField
-        label="Email"
-        name="email"
-        type="email"
-        validate={checkUserExistsAsync}
-        autoComplete="email"
-        aria-label="Email Input"
-      />
-      <TextInputField
-        label="Password"
-        name="password"
-        type="password"
-        autoComplete="new-password"
-        aria-label="Password Input"
-      />
-      <TextInputField
-        label="ConfirmPassword"
-        name="confirmPassword"
-        type="password"
-        autoComplete="new-password"
-        aria-label="Confirm Password Input"
-      />
-      <TextInputField
-        label="First name"
-        name="firstName"
-        type="text"
-        autoComplete="given-name"
-        aria-label="First Name Input"
-      />
-      <TextInputField
-        label="Last name"
-        name="lastName"
-        type="text"
-        autoComplete="family-name"
-        aria-label="Last Name Input"
-      />
-      <SelectInputField
-        label="gender"
-        name="gender"
-        autoComplete="gender"
-        aria-label="gender"
-        options={[
-          {value: undefined, label: ""},
-          {value: 1, label: "female"},
-          {value: 2, label: "male"},
-        ]}
-      />
+      <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-2 ">
+        <TextInputField
+          label="Email"
+          name="email"
+          type="email"
+          validate={checkUserExistsAsync}
+          autoComplete="email"
+          aria-label="Email Input"
+        />
+        <TextInputField
+          label="Password"
+          name="password"
+          type="password"
+          autoComplete="new-password"
+          aria-label="Password Input"
+        />
+        <TextInputField
+          label="ConfirmPassword"
+          name="confirmPassword"
+          type="password"
+          autoComplete="new-password"
+          aria-label="Confirm Password Input"
+        />
+        <TextInputField
+          label="First name"
+          name="firstName"
+          type="text"
+          autoComplete="given-name"
+          aria-label="First Name Input"
+        />
+        <TextInputField
+          label="Last name"
+          name="lastName"
+          type="text"
+          autoComplete="family-name"
+          aria-label="Last Name Input"
+        />
+        <SelectInputField
+          label="gender"
+          name="gender"
+          autoComplete="gender"
+          aria-label="gender"
+          options={[
+            {value: undefined, label: ""},
+            {value: 1, label: "female"},
+            {value: 2, label: "male"},
+          ]}
+        />
+      </div>
 
       <div className="flex justify-end">
         <ButtonPrimary type="submit" aria-label="Register Button">
