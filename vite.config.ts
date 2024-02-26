@@ -1,18 +1,25 @@
-import react from "@vitejs/plugin-react";
 import {defineConfig} from "vitest/config";
+import react from "@vitejs/plugin-react";
+import {getViteConfig} from "./src/_server/helpers.ts";
 
-// https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [react()],
-  server: {
-    port: 3000, // LOCAL_PORT
-  },
-  build: {
-    outDir: "build", // Set the output directory to 'build'
-  },
-  test: {
-    environment: "jsdom", //
-    setupFiles: ["./src/tests/vitestSetup.ts"],
-    globals: true,
-  },
-});
+export default ({mode}) => {
+  const {VITE_LOCAL_PORT, VITE_LOCAL_SERVER_PORT} = getViteConfig(mode);
+
+  return defineConfig({
+    plugins: [react()],
+    server: {
+      port: parseInt(VITE_LOCAL_PORT, 10),
+    },
+    preview: {
+      port: parseInt(VITE_LOCAL_SERVER_PORT, 10),
+    },
+    build: {
+      outDir: "build",
+    },
+    test: {
+      environment: "jsdom",
+      setupFiles: ["./src/tests/vitestSetup.ts"],
+      globals: true,
+    },
+  });
+};

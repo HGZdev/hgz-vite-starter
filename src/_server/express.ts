@@ -9,11 +9,20 @@ import {
 } from "../../lib/apollo/index.ts";
 import schema from "./graphql/index.ts";
 import cookieParser from "cookie-parser";
-import {getUserFromToken} from "./helpers.ts";
+import {getUserFromToken, getViteConfig} from "./helpers.ts";
 
-const LOCAL_SERVER_PORT = 8080;
-const URL = "http://localhost:3000";
-const GRAPHQL_DIR = "/graphql";
+const {
+  VITE_LOCAL_PORT,
+  VITE_LOCAL_SERVER_PORT,
+  VITE_PROD_HOST_URL,
+  VITE_LOCAL_HOST_URL,
+  VITE_GRAPHQL_DIR,
+} = getViteConfig(process.env.NODE_ENV);
+
+const CLIENT_URL =
+  process.env.NODE_ENV === "production"
+    ? VITE_PROD_HOST_URL
+    : `${VITE_LOCAL_HOST_URL}:${VITE_LOCAL_PORT}`;
 
 const app = express();
 
@@ -29,9 +38,9 @@ const apolloServer = await makeApolloServer({
 await apolloServer.start();
 
 app.use(
-  GRAPHQL_DIR,
+  VITE_GRAPHQL_DIR as string,
   cors({
-    origin: URL, // Client URL (frontend)
+    origin: CLIENT_URL, // Client URL (frontend)
     credentials: true, // required to pass cookies from CORS, as server operates on different port.
   }),
   express.json(),
@@ -44,8 +53,8 @@ app.use(
 );
 
 await new Promise<void>((resolve) => {
-  httpServer.listen({port: LOCAL_SERVER_PORT}, () => resolve());
+  httpServer.listen({port: VITE_LOCAL_SERVER_PORT}, () => resolve());
 });
 console.log(
-  `🚀 Server is running at http://localhost:${LOCAL_SERVER_PORT}/graphql`
+  `🚀 Server is running at http://localhost:${VITE_LOCAL_SERVER_PORT}/graphql`
 );
