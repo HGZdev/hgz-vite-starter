@@ -3,7 +3,6 @@ import {
   createMemoryRouter,
   createRoutesFromElements,
 } from "react-router-dom";
-import config from "../../../config/config";
 import {makeApolloProvider} from "../../../lib/apollo/ApolloClient";
 import GlobalStyles from "../../styles/GlobalStyles";
 import {RoutesConfig} from "../../client/Root";
@@ -17,7 +16,7 @@ export const renderMockRoot = ({
   initialEntries?: string[] | undefined;
 } = {}) => {
   // create ApolloProvider here for mock server queries isolation
-  const ApolloProvider = makeApolloProvider(config);
+  const ApolloProvider = makeApolloProvider(import.meta.env);
 
   // Router v6 data router
   const router = createMemoryRouter(createRoutesFromElements(Routes), {

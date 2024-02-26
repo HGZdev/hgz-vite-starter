@@ -7,6 +7,9 @@ pnpm-debug.log*
 lerna-debug.log*
 
 .env
+.env.production
+.env.development
+.env.testing
 node_modules
 build
 build-ssr

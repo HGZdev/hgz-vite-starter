@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "node": "tsc && node --loader ts-node/esm  src/_server/express.ts --watch --debug",
-    "build": "tsc && vite build  --watch",
-    "prod": "vite preview",
-    "test": "vitest",
+    "node": "tsc && NODE_ENV=development node --loader ts-node/esm  src/_server/express.ts --watch --debug",
+    "build": "tsc && vite build --watch",
+    "preview": "NODE_ENV=production vite preview",
+    "prod": "vite build && vite preview",
+    "test": "NODE_ENV=testing vitest",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
