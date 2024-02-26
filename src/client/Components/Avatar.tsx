@@ -12,7 +12,7 @@ export const Avatar = ({
   return (
     <div className="avatar">
       <div className={className}>
-        <Img alt="avatar" src="/../assets/favicon.ico" />
+        <Img alt="avatar" src="./assets/favicon.png" />
       </div>
     </div>
   );
@@ -26,7 +26,7 @@ export const MiniAvatar = ({
   return (
     <div className="avatar">
       <div className={className}>
-        <img alt="avatar" src="/../assets/favicon.ico" />
+        <img alt="avatar" src="./assets/favicon.png" />
       </div>
     </div>
   );

@@ -7,7 +7,7 @@ import {
   createRoutesFromElements,
 } from "react-router-dom";
 import LandingPage from "./Pages/Public/LandingPage.tsx";
-
+import {Helmet} from "react-helmet";
 import Registration from "./Pages/Public/Registration.tsx";
 import ErrorPage from "./Pages/Public/ErrorPage.tsx";
 import {makeApolloProvider} from "../../lib/apollo/ApolloClient.tsx";
@@ -30,10 +30,18 @@ const router = createBrowserRouter(createRoutesFromElements(RoutesConfig));
 
 const Root: React.FC = () => {
   return (
-    <ApolloProvider>
-      <GlobalStyles />
-      <RouterProvider router={router} future={{v7_startTransition: true}} />
-    </ApolloProvider>
+    <>
+      <Helmet>
+        <meta charSet="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Vite + React + TS</title>
+        <link rel="icon" type="image/png" href="/assets/favicon.png" />
+      </Helmet>
+      <ApolloProvider>
+        <GlobalStyles />
+        <RouterProvider router={router} future={{v7_startTransition: true}} />
+      </ApolloProvider>
+    </>
   );
 };
 
